@@ -136,6 +136,10 @@ Findings from our experiments:
 - **Loss correlates with performance**, at least within the same architecture. This isn't obvious — the training loss is reconstruction error on action chunks, not task success.
 - **FPV-only is limited by context.** With a single wrist camera and `n_obs_steps=1`, the robot has no memory. Increasing context to 16 frames (~1.6s) helps but isn't enough for tasks requiring search. We likely need 2-5 seconds or a fundamentally different architecture (recurrent, xLSTM).
 
+{% include figure.html path="assets/img/robot-rl/il-training-loss-comparison.png" caption="WandB training loss (action chunk MSE) on the cube sorting task. Three ACT runs (orange, green, red) at different learning rates and batch sizes plateau around loss 1.5-2.0, while SmolVLA (teal) converges to near zero. The gap comes from the pretrained VLM backbone: SmolVLA starts with strong visual features, so the policy head only needs to learn the action mapping. All runs use the same 40-episode FPV dataset." class="img-fluid rounded z-depth-1" zoomable=true %}
+
+{% include figure.html path="assets/img/robot-rl/il-validation-loss-overfitting.png" caption="Validation loss (computed with actual inference logic, not teacher-forced) for a SmolVLA training run on cube sorting. Loss decreases until around 60k steps, then starts climbing and becomes noisy past 80k. The vertical line marks the best checkpoint. This motivated adding early stopping with EMA weight averaging to all our training scripts. With only 40-100 demos, overfitting is the main failure mode." class="img-fluid rounded z-depth-1" zoomable=true %}
+
 
 ## Reward Models
 
@@ -168,6 +172,10 @@ We use standard SAC with several additions:
 - **Delayed policy updates** (TD3-style): the actor updates every 4 critic updates, which helps stability
 - **Weight normalization**: after each gradient step, Linear layer weights (except output heads) are projected to unit norm. This keeps the effective learning rate constant.
 - **Update-to-data (UTD) ratio of 4**: 4 gradient steps per environment step. This is important because environment steps are expensive (real-time on hardware), so we want to extract as much learning as possible from each transition.
+
+{% include figure.html path="assets/img/robot-rl/rl-base-learning-curves.png" caption="SAC on real hardware: position holding with 6 joint angles as input. Top panel: reward (negative squared distance to home position) converges to near zero within 800 steps. Second panel: Q-value estimates stabilize around -150 to -200. Third: torque readings stay moderate (0.5-1.5 range). Fourth: control loop frequency holds at 6-8 Hz. Bottom: the entropy coefficient alpha decays from 0.20 to 0.12 as the policy becomes more deterministic. This was our first successful end-to-end RL run on the real robot." class="img-fluid rounded z-depth-1" zoomable=true %}
+
+{% include figure.html path="assets/img/robot-rl/rl-weight-norm-learning-curves.png" caption="Same position holding task with weight normalization and torque penalty added. Now tracking six panels: total reward, position reward component, torque penalty (near zero, meaning the robot holds position with minimal force), Q-values (much smaller magnitude around -5 to -8 vs. -200 without weight norm), torque, and control frequency. The reward signal is noisier with periodic dips from exploration, but Q-values are better calibrated and the torque penalty stays flat. Alpha decays more slowly, suggesting the policy maintains useful exploration longer. Run converges in about 1600 steps." class="img-fluid rounded z-depth-1" zoomable=true %}
 
 ### Action Spaces
 

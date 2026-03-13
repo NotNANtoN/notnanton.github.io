@@ -88,6 +88,10 @@ On the IL side, we discovered that batch size matters a lot. We trained ACT and 
 
 But the story got more nuanced. In November, we did more systematic comparisons and found that bs=64 ACT at 10k steps performed comparably or better than bs=1 at 100k (4-5/10 success vs. 1/10), reaching the same loss much faster. The key insight: loss does seem to correlate with performance, but both overfit eventually. SmolVLA trained for 500k steps was clearly overfit past 100k.
 
+{% include figure.html path="assets/img/robot-rl/il-training-loss-comparison.png" caption="WandB training loss on the cube sorting task. Three ACT runs (orange, green, red) with different hyperparameters all plateau around loss 1.5-2.0. SmolVLA (teal) drops to near zero thanks to the pretrained VLM backbone. At the time, we thought lower loss automatically meant better task performance. It mostly did within the same architecture, but comparing across architectures was misleading." class="img-fluid rounded z-depth-1" zoomable=true %}
+
+{% include figure.html path="assets/img/robot-rl/il-validation-loss-overfitting.png" caption="Validation loss for a SmolVLA run. Loss bottoms out around 60k steps (vertical line marks the best checkpoint), then climbs steadily past 80k. With only 40-100 demos, overfitting is inevitable if you train too long. This plot is what convinced us to add early stopping with EMA weight averaging to every training script." class="img-fluid rounded z-depth-1" zoomable=true %}
+
 This was also when we recognized a fundamental limitation of FPV-only control: with a single wrist camera, the robot can't see the full scene. We need temporal context (multiple past observations), but on our compute budget we could only train with ~16 past frames — about half a second. We probably need 2-5 seconds of context.
 
 We also set up WandB for shared logging and added validation loss tracking to detect overfitting properly, using actual inference logic rather than training loss to make different architectures comparable.
@@ -126,11 +130,15 @@ The distributed actor-learner architecture was too complex for debugging. So I w
 
 I started with the simplest possible problem: hold the home position. Reward = negative distance to home, joints only as input, no camera. The policy learned in about 800 steps. Learning rate wasn't very sensitive — anything from 1e-2 to 3e-4 worked, with 1e-4 converging fastest.
 
+{% include figure.html path="assets/img/robot-rl/rl-base-learning-curves.png" caption="The first successful RL run on the real robot. Five panels from our minimal_rl.py script: reward (negative distance to home) converges to near zero within 800 steps, Q-values stabilize around -200, torque stays moderate, the control loop holds 6-8 Hz, and the entropy coefficient alpha decays as the policy commits to staying still. Simple task, but this validated the entire pipeline: SAC, robot communication, reward loop, and safety layer all working together." class="img-fluid rounded z-depth-1" zoomable=true %}
+
 Then I added torque minimization as a second objective. The policy learned to hold position with minimal force, but the experiments revealed that RL exploration can put real strain on the servos. That directly motivated the next step.
 
 In early March I integrated a PI compliance controller — the robot gives way to resistance instead of fighting it, with a reactive safety layer that reads motor currents and attenuates commands when torque is too high. This made experimentation much safer.
 
 I also added weight normalization (projecting linear layer weights to unit sphere after each gradient step, XQC-style) and delayed policy updates (TD3-style, update actor every 4 critic updates). Both helped stability.
+
+{% include figure.html path="assets/img/robot-rl/rl-weight-norm-learning-curves.png" caption="Position holding with weight normalization and torque penalty. Now six panels: total reward, position reward, torque penalty (near zero, meaning the robot holds with minimal force), Q-values (much better calibrated at -5 to -8 vs. -200 without weight norm), torque readings, and control frequency. The reward is noisier due to periodic exploration dips, but the Q-values are realistic and the torque penalty stays flat. Converges in about 1600 steps." class="img-fluid rounded z-depth-1" zoomable=true %}
 
 The next step is adding vision to these simple tasks (position holding with camera input) before moving to the real target: RL-based improvement of the pick-and-place policies.
 
