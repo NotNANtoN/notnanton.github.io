@@ -111,7 +111,7 @@ Key properties for our setup:
 
 ### SmolVLA
 
-**SmolVLA** <d-cite key="allal2025smolvla"></d-cite> adapts a vision-language model (VLM) backbone for robot control. The architecture reuses a pretrained SmolVLM-2 and fine-tunes it to output motor commands.
+**SmolVLA** <d-cite key="shukor2025smolvla"></d-cite> adapts a vision-language model (VLM) backbone for robot control. The architecture reuses a pretrained SmolVLM-2 and fine-tunes it to output motor commands.
 
 Key properties:
 - Pretrained VLM backbone — this is critical. Training from scratch (which we accidentally did for months) produces near-random policies.
@@ -187,15 +187,17 @@ where \\(\Delta_{\max} = \text{action\_scale\_per\_s} / \text{fps}\\) (default: 
 
 **Demo conversion.** When seeding the replay buffer from demonstrations, absolute-position transitions are converted to deltas. If any delta exceeds the action scale, the transition is split into N sub-transitions with linearly interpolated proprioception and zero-order-hold images. Without this, the policy would be asked to learn impossibly large single-step jumps.
 
-### Torque-Aware Safety
+### Controller and Compliance
 
-The robot is fragile. We implement two safety layers:
+The robot is fragile, and RL exploration can put dangerous pressure on the servos. To handle this, we moved from a simple position-command interface to a **PI compliance controller** with integrated safety layers.
 
-**Proactive.** Every delta action is clamped to \\(\pm 5°\\) per step, preventing large sudden movements regardless of what the policy outputs.
+**PI Compliance.** Instead of the motors fighting every external force to reach a target, the controller allows for "give." It calculates the error between target and current position and applies a proportional-integral correction, but with a low enough gain that the robot is physically compliant. This makes it safer to interact with and less likely to burn out motors during stalled exploration.
 
-**Reactive.** Motor currents are read each step. When current exceeds a threshold, the commanded action is attenuated. Movements back toward the home position are exempted from attenuation so the robot can recover from loaded positions.
+**Torque-Aware Safety.** We supplement the controller with two additional layers:
+- **Proactive:** Every delta action from the RL policy is clamped to \\(\pm 5°\\) per step, preventing large sudden movements.
+- **Reactive:** Motor currents (torque) are read in real-time. When current exceeds a safety threshold, the commanded action is attenuated. Movements *back* toward the home position are exempted from this attenuation, allowing the robot to recover from high-load states.
 
-These safety measures run at the environment level and are transparent to the policy. The policy sees only that certain actions produce less movement than expected.
+These measures run at the environment level and are transparent to the RL policy. The policy simply perceives that certain high-torque actions produce less movement than commanded, effectively learning the robot's physical limits through the reward signal.
 
 ### Human-in-the-Loop Rewards
 
@@ -210,11 +212,12 @@ The human reward is added to whatever automated signal exists (torque penalty, c
 
 ### XQC
 
-**Cross-Q with Corrections** <d-cite key="bhatt2024crossq"></d-cite> is an extension of SAC that we've implemented but not yet deployed on the real robot. The key ideas:
+**XQC: Well-conditioned Optimization Accelerates Deep Reinforcement Learning** <d-cite key="palenicek2026xqc"></d-cite> is a sample-efficient actor-critic algorithm built on SAC that we've implemented but not yet fully deployed on the real robot. It builds on the principles of **Cross-Q** <d-cite key="bhatt2024crossq"></d-cite> but, unlike the original Cross-Q, it **keeps target networks** to maintain stable learning under non-stationary targets. The key ideas:
 
-- **No target networks.** Instead, batch normalization is applied to a *joined* batch of current and next states during the critic forward pass. This ensures consistent normalization statistics and removes the need for a separate target network and its soft update.
+- **Target networks.** Unlike Cross-Q, which removes them in favor of a joined batch normalization, XQC retains target networks but makes them more stable through well-conditioned optimization.
+- **Batch Normalization (BN).** Used to stabilize the critic's optimization landscape.
+- **Weight Normalization (WN).** After each optimizer step, all hidden-layer weights are projected to the unit sphere, keeping the effective learning rate stable regardless of weight magnitude.
 - **Distributional critic (C51).** Instead of predicting a single Q-value, the critic outputs a categorical distribution over returns (51 atoms). The loss is a categorical cross-entropy against a projected Bellman target. This captures uncertainty and tends to learn faster.
-- **Weight normalization.** After each optimizer step, all hidden-layer weights are projected to the unit sphere, keeping the effective learning rate stable regardless of weight magnitude.
 
 The implementation is complete and tested, but batch normalization with batch_size=1 during inference (when the robot takes a single action) requires careful handling of BN running statistics. This is the main blocker for real-robot deployment.
 

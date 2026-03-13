@@ -6,6 +6,7 @@ tags: reinforcement-learning robotics
 giscus_comments: true
 date: 2026-03-13
 featured: true
+bibliography: 2026-03-13-robot-learning-setup.bib
 
 authors:
   - name: Anton Wiehe
@@ -73,7 +74,7 @@ We started at the Attraktor makerspace, trying to get imitation learning running
 - ACT training worked but evaluation on the robot failed due to hardcoded feature dimensions (6 joints expected, but 12 with velocity features)
 - We merged upstream LeRobot changes and hit more compatibility issues — no support for non-end-effector control in `gym_manipulator.py`
 
-By September we had SmolVLA and ACT training on 40 FPV episodes. Under 500 training steps nothing happened, but from 1000 steps both showed signs of reacting to the matchbox. SmolVLA at 10k steps actually managed to grasp once and place it, though it seemed random.
+By September we had **SmolVLA** <d-cite key="shukor2025smolvla"></d-cite> and **ACT** <d-cite key="zhao2023act"></d-cite> training on 40 FPV episodes. Under 500 training steps nothing happened, but from 1000 steps both showed signs of reacting to the matchbox. SmolVLA at 10k steps actually managed to grasp once and place it, though it seemed random.
 
 ### Oct-Nov 2025: First RL attempts and overfitting
 
@@ -118,7 +119,7 @@ Late January was the breakthrough. Key findings:
 - We added torque reading as a reward signal (negative reward for high motor current, except gripper)
 - We implemented UMAP visualization of trajectories to understand what the policy was exploring
 
-We also studied the ResFiT paper (Ankile et al. 2025) in detail and identified concrete things to implement: n-step returns, higher UTD ratio (we were at ~0.2 effective when training at 2Hz but operating at 10Hz), delayed policy updates, and DrQ augmentations.
+We also studied the **ResFiT** paper (Ankile et al. 2025) <d-cite key="ankile2025resfit"></d-cite> in detail and identified concrete things to implement: n-step returns, higher UTD ratio (we were at ~0.2 effective when training at 2Hz but operating at 10Hz), delayed policy updates, and DrQ augmentations.
 
 On February 13 — a long night session — we mapped out the full ResFiT architecture in detail: freeze the IL policy, predict its action for each sample, let SAC learn small residual corrections bounded to 20% of action range, use a shallow ViT with DrQ augmentations for the RL critic, layer norm only in the critic, update actor every 2-8 critic steps, and sample 50/50 from expert and newly collected data. Their results with ACT on real hardware were compelling: 1000 demos plus 134 online RL episodes (15 minutes) improved a bimanual pick-and-place from 13% to 64% success.
 
@@ -134,9 +135,9 @@ I started with the simplest possible problem: hold the home position. Reward = n
 
 Then I added torque minimization as a second objective. The policy learned to hold position with minimal force, but the experiments revealed that RL exploration can put real strain on the servos. That directly motivated the next step.
 
-In early March I integrated a PI compliance controller — the robot gives way to resistance instead of fighting it, with a reactive safety layer that reads motor currents and attenuates commands when torque is too high. This made experimentation much safer.
+In early March, I integrated a **PI compliance controller**. Instead of the robot fighting every external force to reach a target, the PI controller allows for "give," making the robot physically compliant. I supplemented this with a reactive safety layer that reads motor currents (torque) and attenuates commands when the load is too high. This move away from a simple position-command interface made experimentation much safer and allowed for longer RL runs without hardware failure.
 
-I also added weight normalization (projecting linear layer weights to unit sphere after each gradient step, XQC-style) and delayed policy updates (TD3-style, update actor every 4 critic updates). Both helped stability.
+I also added weight normalization (projecting linear layer weights to unit sphere after each gradient step, **XQC**-style <d-cite key="palenicek2026xqc"></d-cite>) and delayed policy updates (TD3-style, update actor every 4 critic updates). Both helped stability.
 
 {% include figure.html path="assets/img/robot-rl/rl-weight-norm-learning-curves.png" caption="Position holding with weight normalization and torque penalty. Now six panels: total reward, position reward, torque penalty (near zero, meaning the robot holds with minimal force), Q-values (much better calibrated at -5 to -8 vs. -200 without weight norm), torque readings, and control frequency. The reward is noisier due to periodic exploration dips, but the Q-values are realistic and the torque penalty stays flat. Converges in about 1600 steps." class="img-fluid rounded z-depth-1" zoomable=true %}
 
@@ -230,7 +231,7 @@ There's also a safety layer that clamps max delta per step (5 degrees) and atten
 
 ### Weight Normalization
 
-After each gradient step, all Linear layer weights (except output heads) are projected onto the unit sphere. This is from the XQC paper and helps with training stability by keeping the effective learning rate constant. I have a full XQC implementation (distributional C51 critic with categorical cross-entropy loss, batch normalization with joined forward passes) ready but haven't deployed it on the real robot yet — the batch norm is fragile with batch_size=1 during inference.
+After each gradient step, all Linear layer weights (except output heads) are projected onto the unit sphere. This is from the **XQC** paper and helps with training stability by keeping the effective learning rate constant. I have a full XQC implementation (distributional C51 critic with categorical cross-entropy loss, batch normalization, and target networks) ready but haven't deployed it on the real robot yet — the batch norm is fragile with batch_size=1 during inference.
 
 ### Human Reward Feedback
 
