@@ -1,27 +1,18 @@
 ---
 layout: distill
 title: My PhD Vision
-description: A short overview of my PhD PLan
-tags: distill formatting
+description: Where I want to go with my research and how I plan to get there
+tags: agi cognition
 giscus_comments: true
 date: 2024-01-01
 featured: true
 
 authors:
   - name: Anton Wiehe
-    url: "notnanton.github.io"
+    url: "https://notnanton.github.io"
     affiliations:
-      name: AdaLab
-      name: PHAROS Labs
+      name: PHAROS Labs / AdaLab
 
-# bibliography: 2018-12-22-distill.bib
-
-# Optionally, you can add a table of contents to your post.
-# NOTES:
-#   - make sure that TOC names match the actual section names
-#     for hyperlinks within the post to work correctly.
-#   - we may want to automate TOC generation in the future using
-#     jekyll-toc plugin (https://github.com/toshimaru/jekyll-toc).
 toc:
   - name: Overview
     subsections:
@@ -30,97 +21,75 @@ toc:
   - name: Cognitive Architecture
     subsections:
       - name: Concept
-      - name: Individual Modules and Neurological Analogies
+      - name: Individual Modules
       - name: Learning Hierarchies
-  - name: Project Ideas
-    # if a section has subsections, you can add them as follows:
-    # subsections:
-    #   - name: Example Child Subsection 1
-    #   - name: Example Child Subsection 2
- # - name: Citations
- # - name: Footnotes
- # - name: Code Blocks
- # - name: Interactive Plots
- # - name: Layouts
- # - name: Other Typography?
-
-# Below is an example of injecting additional post-specific styles.
-# If you use this post as a template, delete this _styles block.
-_styles: >
-  .fake-img {
-    background: #bbb;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 12px;
-  }
-  .fake-img p {
-    font-family: monospace;
-    color: white;
-    text-align: left;
-    margin: 12px 0;
-    text-align: center;
-    font-size: 16px;
-  }
+  - name: Research Directions
 
 ---
 
 ## Overview
 
 ### Goal
-An intelligent agent in direct interaction and quick in-context learning. 
+An intelligent agent in direct interaction with its environment, capable of quick in-context learning.
 
 ### Strategy
-Set up cognitive architecture with plan to train it and evolve it.
-For PhD: Focus on aspects and study composites in projects.
+Set up a cognitive architecture with a plan to train and evolve it.
+For the PhD: focus on individual aspects and study how they compose in concrete projects.
 
-Concrete Plan:
-1. Get suitable testing ground (robot with good simulation, decent grid world)
-2. Make overview of AGI architectures/plans (Sutton's Alberta Plan, Schmidhuber's Big Net, Le Cun's JEPA, etc). Write paper summarizing key ingredients, distinctions.
-3. Make own plan and describe in detail how modules interact.
-4. Work on most promising module. Current promise: meta-learning with adapters and MoE.
-5. Select up to 3 modules that can be researched on during the PhD and publish them along with the conjoining architectural plan.
+Concrete plan:
+1. Get a suitable testing ground (robot with good simulation, or a decent grid world).
+2. Survey existing AGI architectures and plans (Sutton's Alberta Plan, Schmidhuber's Big Net, LeCun's JEPA, etc). Write a paper summarizing the key ingredients and where they diverge.
+3. Design my own plan and describe in detail how the modules interact.
+4. Work on the most promising module. Current bet: meta-learning with adapters and mixture-of-experts.
+5. Select up to 3 modules that can be researched during the PhD and publish them along with the overarching architectural plan.
 
 ## Cognitive Architecture
 
 ### Concept
-We define an overall cognitive architecture that achieves the goal. A figure will show up here, illustrating the relationships of the modules.
+The idea is an overall cognitive architecture made of specialized but interconnected modules, loosely inspired by how the brain organizes perception, motivation, and action. Below I sketch the modules and the role each one plays.
 
-### Individual Modules and Neurological Analogies
-- Policy network(s) - division of network of policy networks responsible for actuator regions but overall connectedness
-- Value(feeling) network - output of multi-faceted reward, analogy to control of endorphins
-- Intrinsic motivation network(s) - output of rewards for curiosity, pain-avoidance, beauty-seeking, death avoidance.
-- Perception Network - produces input of policy network by simulating real world, applies sensory biases to filter out noise and generates internal coherent, multi-modal integration of all senses. Very robust, changes only at short beginning of life and evolutionary.
-- Affordance network - (possibly integrated as a conditional mode within the perception network.) Takes in state and intention, produces projected action/series of states/world flow.
-- Word model network - strongly connected to possible affordance network. Produces next state
+### Individual Modules
+
+**Policy network(s).**
+A division of labor: multiple policy networks, each responsible for different actuator regions, but with overall connectedness between them. Think of it like the motor cortex, where regions specialize but still coordinate.
+
+**Value network.**
+Outputs a multi-faceted reward signal. The analogy here is the brain's control of endorphins and other neurochemicals. Rather than a single scalar reward, the value network produces a richer signal that captures different dimensions of "how are things going."
+
+**Intrinsic motivation network(s).**
+Separate from external reward. These networks generate internal rewards for things like curiosity, pain avoidance, beauty-seeking, and self-preservation. The point is that an agent shouldn't need an external teacher to want to explore or to avoid breaking itself.
+
+**Perception network.**
+Produces the input for the policy network by building an internal model of the world. It applies sensory biases to filter noise and generates a coherent, multi-modal integration of all senses. This module should be very robust and change slowly, mostly at the beginning of "life" and through evolutionary pressure.
+
+**Affordance network.**
+Takes in the current state and an intention, then projects what actions are possible and what their consequences look like. This could be a conditional mode within the perception network, or a standalone module. It answers the question: "given where I am and what I want, what can I do?"
+
+**World model network.**
+Strongly connected to the affordance network. Predicts the next state given current state and action. This is what lets the agent plan by simulating futures before committing to action.
 
 ### Learning Hierarchies
-Learning at different levels:
-1. **Evolutionary**: defines base reactive behavior, main cognitive biases, (basic physical "laws"), architectural improvements. Evolutionary algorithm, guided by epi-genetic variations (e.g. network node stability/importance influences allowed change of weights - See Uber Paper)
-2. **Lifelong**: integration of facts, long-term memory, core behavior and automatism. Policy network is trained - maybe by meta-learning over situational episodes.
-3. **Situational**: Quick adaption using adapters (LoRAs). Adapters need to be integrateable into network if they are useful enough.
+Learning happens at different levels, each on its own timescale:
+
+1. **Evolutionary.** Defines base reactive behavior, main cognitive biases, and architectural improvements. Implemented as an evolutionary algorithm, guided by epigenetic variations (for example, network node stability and importance influencing how much weights are allowed to change, similar to ideas in the Uber AI paper on protecting learned knowledge).
+
+2. **Lifelong.** Integration of facts, long-term memory, core behaviors, and automatisms. The policy network is trained here, possibly through meta-learning over situational episodes. This is where skills become permanent.
+
+3. **Situational.** Quick adaptation using adapters (like LoRAs). The agent encounters a new situation and rapidly adjusts. If an adapter proves useful enough over time, it gets integrated into the base network, graduating from situational to lifelong knowledge.
 
 
-## Project ideas
-Project ideas in _RL_ and _meta-learning_.
+## Research Directions
 
-(Legend RL=reinforcement-learning, DL=Deep Learning)
-1. RL Projects:
--  defining architecture that can think, plan, adapt
-- incorporate knowledge of CLIP or LLMs into agent, using them either as
-knowledge base, its token embeddings as latent space to formulate thoughts, or as generalized algorithms that can be abused in contexts where no language is necessary
-- RL: put planning steps (interaction path of world model + policy) into LSTM memory to let it "think", then plan new paths and finally decide after planning is done.
--  RL: Hierarchical actor-critic on any domain using quantized/symbolized (VQ-VAE - like) options/sub-tasks
--  ?RL + Meta Learning: define learnability via meta-learning world model
-2. Meta learning Projects
-3. Other Projcets
--  Meta-learning: divide dataset in clusters, train neural net using MAML on it, clusters as separate "skills", increase granularity of clusters over training time
-3. Deep Learning Projects
-- DL: learning a training schedule akin to prioritized replay but also focusing on: which samples to reject entirely? Which ones combine well with which other ones to get a clean gradient?
--  DL: training very large models with mostly frozen weights and only train adapters to modify flow
--  DL: train music or video model
--  DL: live-reacting plazmapunk
+A few directions I find most promising, roughly grouped:
 
+**Incorporating foundation model knowledge into RL agents.**
+Can we use what CLIP or LLMs already know and plug it into a reinforcement learning agent? There are several angles: using them as a knowledge base, repurposing their token embeddings as a latent space for "thinking," or treating their learned algorithms as general-purpose tools even in non-language domains.
 
-{% details Project 1 %}
-Additional details, where math $$ 2x - 1 $$ and `code` is rendered correctly.
-{% enddetails %}
+**Planning as internal simulation.**
+Put planning steps (the interaction between a world model and a policy) into recurrent memory so the agent can "think" before acting. It simulates paths, evaluates them, and only commits to action once planning is done.
+
+**Hierarchical RL with learned abstractions.**
+Hierarchical actor-critic methods where options and sub-tasks are discovered automatically through quantized, symbol-like representations (in the spirit of VQ-VAE). The goal is an agent that builds its own action hierarchy rather than having one hand-designed.
+
+**Meta-learning for faster adaptation.**
+Defining learnability itself through meta-learning: training a world model that learns how to learn, so the agent can pick up new tasks with minimal experience. Related: dividing datasets into clusters, training with MAML across them as separate "skills," and increasing cluster granularity over time.

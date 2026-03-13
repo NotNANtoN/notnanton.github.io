@@ -2,96 +2,82 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
-    - name: Date of Birth
-      value: 14th March 1879
+      value: Anton Orell Wiehe
     - name: Languages
-      value: English, German
+      value: German (native), English (fluent)
 
 - title: Education
   type: time_table
   contents:
-    - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
+    - title: M.Sc. Intelligent Adaptive Systems
+      institution: Universität Hamburg, Germany
+      year: 2018 - 2023
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+        - "Grade: 1.0 — Cum Laude"
+        - International, research-oriented program focused on artificial intelligence (5% acceptance rate).
+        - "Thesis: Domain Adaptation for Multi-Modal Foundation Models (at inovex GmbH)"
+    - title: Pre-doctoral Research School (CMMRS)
+      institution: Max Planck Society, Saarbrücken, Germany
+      year: 2023
       description:
-        - Description 1.
-        - Description 2.
+        - Selected participant learning from guest lecturers in AI, computer systems, and robotics from Cornell, University of Maryland, and Max Planck.
+    - title: B.Sc. Computing Science
+      institution: Rijksuniversiteit Groningen, Netherlands
+      year: 2015 - 2018
 
 - title: Experience
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: Co-Founder and Head of AI
+      institution: PHAROS Labs
+      year: 2024 - present
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
+        - Developing Regulaido, an AI-powered platform for medical writing and regulatory document processing.
+        - AI-generated content with full source traceability — every claim traces back to a verifiable reference.
+        - Built SLR module for PubMed search, screening, and extraction.
+    - title: CTO and Co-Founder
+      institution: AdaLab.ai
+      year: 2020 - present
       description:
-        - Description 1.
-        - Description 2.
-
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
+        - Developed AI-based medical applications, including critical care prediction models published in BRAIN journal.
+        - Created Plazmapunk, an AI-powered music video generation product.
+    - title: Master Thesis
+      institution: inovex GmbH, Hamburg
+      year: 2021 - 2022
       description:
+        - "Domain Adaptation for Multi-Modal Foundation Models: applied contrastive learning to chest X-ray images and medical reports."
+    - title: Research Assistant
+      institution: Universitätsklinikum Hamburg Eppendorf (UKE)
+      year: 2019 - 2020
+      description:
+        - Developed LSTM models to predict critical intracranial hypertension up to 24 hours in advance.
+        - Focused on explainability of deep networks via gradient analysis.
+    - title: Student Tutor — Data Mining
+      institution: Universität Hamburg
+      year: 2019 - 2020
+    - title: Research Assistant — IDEAS Project
+      institution: Universität Hamburg
+      year: 2019
+      description:
+        - Evaluated hierarchical actor-critic deep reinforcement learning agents in environments requiring understanding of temporally distant causal links.
 
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
-
-- title: Open Source Projects
+- title: Awards
   type: time_table
   contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+    - year: 2020
+      items:
+        - Best Visual Saliency System Award (Computer Vision 2, Prof. Simone Frintrop, Universität Hamburg)
 
-- title: Honors and Awards
-  type: time_table
-  contents:
-    - year: 1921
-      items: 
-        - Nobel Prize in Physics 
-        - Matteucci Medal
-    - year: 2029
-      items: 
-        - Max Planck Medal
-
-- title: Academic Interests
+- title: Research Interests
   type: nested_list
   contents:
-    - title: Topic 1.
-      items: 
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
+    - title: Artificial General Intelligence
       items:
-        - Description 1.
-        - Description 2.
-
-- title: Other Interests
-  type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+        - Combining LLMs with reinforcement learning
+        - Mathematical formulations of curiosity
+        - Modular systems that learn from their environment
+    - title: Medical AI
+      items:
+        - Predictive models for critical care
+        - AI-assisted regulatory writing
+        - Multi-modal foundation models for medical imaging

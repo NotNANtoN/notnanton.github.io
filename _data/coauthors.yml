@@ -1,34 +1,23 @@
-"Adams":
-  - firstname: ["Edwin", "E.", "E. P.", "Edwin Plimpton"]
-    url: https://en.wikipedia.org/wiki/Edwin_Plimpton_Adams
+"Röder":
+  - firstname: ["Frank", "F."]
+    url: https://scholar.google.com/citations?user=FRANK_ROEDER_ID
 
-"Podolsky":
-  - firstname: ["Boris", "B.", "B. Y.", "Boris Yakovlevich"]
-    url: https://en.wikipedia.org/wiki/Boris_Podolsky
+"Wiering":
+  - firstname: ["Marco A.", "Marco", "M. A."]
+    url: https://scholar.google.com/citations?user=MARCO_WIERING_ID
 
-"Rosen":
-  - firstname: ["Nathan", "N."]
-    url: https://en.wikipedia.org/wiki/Nathan_Rosen
+"Zorn":
+  - firstname: ["Hans-Peter", "H.-P."]
+    url: https://scholar.google.com/citations?user=HP_ZORN_ID
 
-"Bach": 
-  - firstname: ["Johann Sebastian", "J. S."]
-    url: https://en.wikipedia.org/wiki/Johann_Sebastian_Bach
+"Biemann":
+  - firstname: ["Chris", "C."]
+    url: https://scholar.google.com/citations?user=CHRIS_BIEMANN_ID
 
-  - firstname: ["Carl Philipp Emanuel", "C. P. E."]
-    url: https://en.wikipedia.org/wiki/Carl_Philipp_Emanuel_Bach
+"Schneider":
+  - firstname: ["Florian", "F."]
+    url: https://scholar.google.com/citations?user=FLORIAN_SCHNEIDER_ID
 
-"Przibram":
-  - firstname: ["Karl"]
-    url: https://link.springer.com/article/10.1007/s00016-019-00242-z
-
-"Schrödinger":
-  - firstname: ["Erwin"]
-    url: https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger
-
-"Lorentz":
-  - firstname: ["Hendrik Antoon"]
-    url: https://en.wikipedia.org/wiki/Hendrik_Lorentz
-
-"Planck":
-  - firstname: ["Max"]
-    url: https://en.wikipedia.org/wiki/Max_Planck
+"Wang":
+  - firstname: ["Xintong", "X."]
+    url: https://scholar.google.com/citations?user=XINTONG_WANG_ID

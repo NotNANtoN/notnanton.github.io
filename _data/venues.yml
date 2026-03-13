@@ -1,6 +1,15 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
-  color: "#00369f"
+"BRAIN":
+  url: https://academic.oup.com/brain
+  color: "#1a5276"
 
-"PhysRev":
-  url: https://journals.aps.org/
+"AACL-IJCNLP":
+  url: https://www.aclweb.org/
+  color: "#d4351c"
+
+"ICAART":
+  url: https://www.icaart.org/
+  color: "#2e86c1"
+
+"JCMC":
+  url: https://www.springer.com/journal/10877
+  color: "#117a65"

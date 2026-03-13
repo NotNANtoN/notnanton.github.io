@@ -1,6 +1,11 @@
 #!/bin/bash
+echo "Entry point script running"
 
-CONFIG_FILE=_config.yml 
+CONFIG_FILE=_config.yml
+
+echo "Installing gems..."
+bundle install --retry 3
+echo "Gems installed, starting Jekyll..."
 
 /bin/bash -c "rm -f Gemfile.lock && exec jekyll serve --watch --port=8080 --host=0.0.0.0 --livereload --verbose --trace --force_polling"&
 
