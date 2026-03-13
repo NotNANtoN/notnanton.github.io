@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: "Robot RL: From Demonstrations to Online Learning on a Real SO-101"
-description: A report on seven months of building a robot learning pipeline — what I tried, what broke, and what finally worked.
+description: Seven months of building a robot learning pipeline — the timeline, the dead ends, and the breakthroughs. See also the companion technical overview post.
 tags: reinforcement-learning robotics
 giscus_comments: true
 date: 2026-03-13
@@ -44,6 +44,8 @@ toc:
 ## Overview
 
 This post covers about seven months of work on getting a real robot arm to learn manipulation tasks. It's meant as an honest account of the process — the dead ends, the debugging, and the things that eventually clicked. The goal is to give my professor and potential collaborators a clear picture of where the project stands, what infrastructure exists, and where students could plug in.
+
+For a cleaner technical overview of the setup, techniques, and algorithms, see the [companion post]({% post_url 2026-03-13-robot-learning-setup %}). This post is the lab diary.
 
 The high-level goal is language-guided goal setting with quick learning of new tasks. The first concrete sub-goal was simple: grab a matchbox and place it somewhere. That turned out to be far from simple.
 
@@ -122,11 +124,15 @@ I also attended the Mannheim RL Workshop 2026, which solidified my thinking arou
 
 The distributed actor-learner architecture was too complex for debugging. So I wrote `minimal_rl.py` — a single-process SAC script that bypasses all the infrastructure and talks directly to the robot.
 
-The results were immediate: with a simple "stay at home position" reward (negative distance to home, plus torque penalty), the policy learned in about 800 steps. Learning rate wasn't very sensitive — anything from 1e-2 to 3e-4 worked, with 1e-4 converging fastest.
+I started with the simplest possible problem: hold the home position. Reward = negative distance to home, joints only as input, no camera. The policy learned in about 800 steps. Learning rate wasn't very sensitive — anything from 1e-2 to 3e-4 worked, with 1e-4 converging fastest.
+
+Then I added torque minimization as a second objective. The policy learned to hold position with minimal force, but the experiments revealed that RL exploration can put real strain on the servos. That directly motivated the next step.
+
+In early March I integrated a PI compliance controller — the robot gives way to resistance instead of fighting it, with a reactive safety layer that reads motor currents and attenuates commands when torque is too high. This made experimentation much safer.
 
 I also added weight normalization (projecting linear layer weights to unit sphere after each gradient step, XQC-style) and delayed policy updates (TD3-style, update actor every 4 critic updates). Both helped stability.
 
-In early March I integrated a compliance controller — a PI controller that makes the robot give way to resistance, with a safety layer that reads motor currents and attenuates commands when torque is too high.
+The next step is adding vision to these simple tasks (position holding with camera input) before moving to the real target: RL-based improvement of the pick-and-place policies.
 
 
 ## The Pipeline
@@ -148,7 +154,7 @@ I typically collect 20-50 demonstrations per task. The data is stored as absolut
 
 A post-processing script marks the last N frames of each successful episode as `reward=1.0`, everything else as `reward=0.0`. A ResNet-10 classifier trains on these labeled images.
 
-Honest assessment: the reward classifier has been hit-or-miss. It works OK for clear visual differences (cube in hand vs. not), but produces many false positives when the scene is ambiguous. I'm currently working more with human reward feedback and torque-based rewards instead.
+The reward classifier's accuracy depends heavily on the task. For tasks with clear visual contrasts (e.g., matchbox on a bag vs. empty surface) it works reasonably well. For more ambiguous scenes with distracting objects, false positives become an issue. Human reward feedback and torque-based rewards are complementary signals we use alongside it.
 
 ### Step 3: Reinforcement Learning
 
@@ -180,7 +186,7 @@ The script I'm actively using is `minimal_rl.py` — a ~1000-line single-process
 | Reward norm | Off | Running mean/std — still buggy |
 | Mixed precision | bf16 | On CUDA |
 
-The architecture is simple: a 256-dim encoder (Linear + LayerNorm + ReLU), a 2-layer actor MLP outputting tanh-squashed Gaussian actions, and a twin-critic with 2-layer MLPs. Joint positions are the input (6 DOF, normalized to [-1, 1]). Camera can be enabled but is off by default for the simple tasks.
+The architecture is simple: a 256-dim encoder (Linear + LayerNorm + ReLU), a 2-layer actor MLP outputting tanh-squashed Gaussian actions, and a twin-critic with 2-layer MLPs. Joint positions are the input (6 DOF, normalized to [-1, 1]). Camera input can be enabled (and was used for all supervised learning with ACT/SmolVLA), but is off by default in the minimal RL script for the simple proprioceptive tasks we've been debugging with. Getting RL to work with visual observations on the real robot is an active next step.
 
 Reward is currently: `reward = -distance_to_home / 100 - torque_penalty`. The torque penalty uses the sum of squared motor currents.
 
@@ -234,13 +240,16 @@ During RL training, number keys 0-9 provide graded rewards (0.0 to 0.9), minus k
 - Torque penalty — effective at preventing self-damage during exploration
 - PI compliance controller — makes the robot safe to be around
 
-**Didn't work well / still struggling:**
-- Reward classifier — too many false positives, unreliable as sole reward
+**Still in progress:**
+- Reward classifier — performance is task-dependent; works well for clear visual contrasts, needs tuning for ambiguous scenes
+- Batch normalization in RL — implemented but not yet properly tested on the real robot due to batch_size=1 inference complications
+- Reward normalization — running mean/std needs more work to stabilize in early training
+- RL with vision — supervised learning with camera images works (that's how ACT/SmolVLA operate), but we haven't gotten RL to work well with visual observations yet
+
+**Didn't work well:**
 - SmolVLA from scratch — we accidentally trained without pretrained weights for months
 - Large batch sizes for IL — overfit faster than expected
-- Batch normalization in RL — works in theory (XQC) but batch_size=1 inference is painful
-- Reward normalization — running mean/std is unstable in early training
-- Distributed actor-learner — correct but hard to debug, minimal script was the fix
+- Distributed actor-learner — functionally correct but too complex to debug; the minimal single-process script was the fix
 
 
 ## What's Next

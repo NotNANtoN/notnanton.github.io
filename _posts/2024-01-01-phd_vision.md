@@ -5,7 +5,7 @@ description: Where I want to go with my research and how I plan to get there
 tags: agi cognition
 giscus_comments: true
 date: 2024-01-01
-featured: true
+featured: false
 
 authors:
   - name: Anton Wiehe
