@@ -592,8 +592,19 @@ footer.sticky-bottom {
   }
 
   .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
     img {
       width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .card-body {
+      flex: 1;
     }
   }
 
@@ -607,10 +618,19 @@ footer.sticky-bottom {
     }
   }
 
-  .grid-sizer,
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .grid-sizer {
+    display: none;
+  }
+
   .grid-item {
-    width: 250px;
-    margin-bottom: 10px;
+    width: auto;
+    margin-bottom: 0;
   }
 
   h2.category {
@@ -669,14 +689,16 @@ footer.sticky-bottom {
       }
 
       .abbr {
-        height: 2rem;
+        height: auto;
         margin-bottom: 0.5rem;
 
         abbr {
           display: inline-block;
           background-color: var(--global-theme-color);
-          padding-left: 1rem;
-          padding-right: 1rem;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+          font-size: 0.75rem;
+          white-space: nowrap;
 
           a {
             color: white;
@@ -1048,6 +1070,29 @@ nav[data-toggle="toc"] {
     }
   }
 
+  .card {
+    height: 100%;
+    border: 1px solid var(--global-divider-color);
+    overflow: hidden;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: var(--global-theme-color);
+    }
+  }
+
+  .card-img-top-wrap {
+    height: 180px;
+    overflow: hidden;
+
+    .card-img-top {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
   .card-item {
     margin-bottom: 10px;
   }
@@ -1057,6 +1102,109 @@ nav[data-toggle="toc"] {
     font-size: 0.875rem;
     margin-bottom: 0;
     padding-top: 0.5rem;
+  }
+}
+
+// Talks page
+
+.talks {
+  h2.year {
+    color: var(--global-theme-color);
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin-top: 2rem;
+    margin-bottom: 0;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--global-divider-color);
+  }
+
+  .card {
+    background-color: var(--global-card-bg-color);
+    border: 1px solid var(--global-divider-color);
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: var(--global-theme-color);
+    }
+  }
+
+  .talk-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--global-text-color);
+  }
+
+  .talk-meta {
+    font-size: 0.85rem;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.4rem;
+
+    i {
+      margin-right: 0.25rem;
+      color: var(--global-theme-color);
+    }
+  }
+
+  .talk-date {
+    font-size: 0.8rem;
+    color: var(--global-text-color-light);
+  }
+
+  .talk-desc {
+    font-size: 0.9rem;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .talk-links {
+    margin-top: 0.3rem;
+
+    .btn {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-right: 0.4rem;
+      border: 1px solid var(--global-theme-color);
+      color: var(--global-theme-color);
+      padding: 0.15rem 0.6rem;
+
+      &:hover {
+        background-color: var(--global-theme-color);
+        color: white;
+      }
+
+      i {
+        margin-right: 0.3rem;
+      }
+    }
+  }
+
+  .badge-talk {
+    background-color: var(--global-theme-color);
+    color: white;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .badge-poster {
+    background-color: #e0943a;
+    color: white;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .badge-paper {
+    background-color: #5aa87d;
+    color: white;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
   }
 }
 

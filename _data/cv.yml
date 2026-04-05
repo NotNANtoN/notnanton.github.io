@@ -61,6 +61,48 @@
       description:
         - Evaluated hierarchical actor-critic deep reinforcement learning agents in environments requiring understanding of temporally distant causal links.
 
+- title: Talks & Presentations
+  type: time_table
+  contents:
+    - title: "Poster: Agentic AI for Regulatory Medical Writing"
+      institution: DIA 2026
+      year: 2026
+      description:
+        - Poster presentation on agentic AI workflows for regulatory document processing (Pharos Labs).
+    - title: "Medical Writers Shouldn't Type. Coders Shouldn't Code."
+      institution: "GDG Hamburg — From Code to Cure, Google Hamburg"
+      year: 2026
+      description:
+        - Talk on the future of AI-assisted professional workflows in medical writing and software development.
+    - title: "Poster: Mapping Writer-AI Conversations for HTA: An Analysis of 12,500 Messages"
+      institution: ISPOR Europe 2025, Glasgow
+      year: 2025
+      description:
+        - Analysis of 12,500 messages from 32 HTA writers on how AI assistants are used in regulatory medical writing.
+        - With P. Čuk and F. Woeste (Pharos Labs).
+    - title: "Poster: Beyond Productivity: How Professional Identity Shapes GenAI Adoption Among Medical Writing Professionals"
+      institution: ISPOR Europe 2025, Glasgow
+      year: 2025
+      description:
+        - Survey of 27 medical writers showing Perceived Usefulness as the primary driver of AI adoption.
+        - With P. Čuk and F. Woeste (Pharos Labs).
+    - title: "Musik visualisieren mit künstlicher Intelligenz"
+      institution: Digital Science Night #5 — Fundbureau, Hamburg
+      year: 2023
+      description:
+        - Science Slam on AI-powered music video generation, representing AdaLab. Part of "Generation AI: Ich bin doch nur ein Language Model!" event.
+    - title: "Language over Labels: Contrastive Language Supervision on Chest X-Rays"
+      institution: AACL-IJCNLP 2022, Student Research Workshop
+      year: 2022
+      description:
+        - Paper presentation on applying CLIP-style contrastive learning to medical imaging.
+    - title: "Musikvideos durch KI"
+      institution: Nook 2022 (Night of Open Knowledge), Lübeck
+      year: 2022
+      description:
+        - 40-minute talk on generating music videos with AI, co-presented with Florian Woeste.
+        - "Recording: https://media.ccc.de/v/musikvideos-durch-ki"
+
 - title: Awards
   type: time_table
   contents:

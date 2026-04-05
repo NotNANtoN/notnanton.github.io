@@ -138,57 +138,7 @@
       "icon": "fa-solid fa-water"
     }
   ],
-  "publications": [
-    {
-      "name": "Machine Learning Classification of Smoking Behaviours — From Social Environment to the Prefrontal Cortex",
-      "publisher": "Addiction Biology",
-      "releaseDate": "2025-01-01",
-      "url": "",
-      "summary": ""
-    },
-    {
-      "name": "Early prediction of ventricular peritoneal shunt dependency in aneurysmal subarachnoid haemorrhage patients by recurrent neural network-based machine learning",
-      "publisher": "Journal of Clinical Monitoring and Computing",
-      "releaseDate": "2024-01-01",
-      "url": "",
-      "summary": "RNN-based prediction of VP shunt dependency using routine intensive care data."
-    },
-    {
-      "name": "Development and internal validation of a gradient-boosted trees model for prediction of delirium after surgery and anesthesia",
-      "publisher": "medRxiv (BioCog study)",
-      "releaseDate": "2024-12-30",
-      "url": "",
-      "summary": ""
-    },
-    {
-      "name": "Language over Labels: Contrastive Language Supervision Exceeds Purely Label-Supervised Classification Performance on Chest X-Rays",
-      "publisher": "AACL-IJCNLP 2022 Student Research Workshop",
-      "releaseDate": "2022-11-01",
-      "url": "",
-      "summary": "Contrastive language supervision outperforms purely label-supervised classification on chest X-rays."
-    },
-    {
-      "name": "A recurrent machine learning model predicts intracranial hypertension in neurointensive care patients",
-      "publisher": "Brain",
-      "releaseDate": "2022-02-09",
-      "url": "",
-      "summary": "LSTM models predicting critical intracranial hypertension up to 24 hours in advance. 54 citations."
-    },
-    {
-      "name": "Deep Reinforcement Learning for Pellet Eating in Agar.io",
-      "publisher": "ICAART",
-      "releaseDate": "2019-01-01",
-      "url": "",
-      "summary": ""
-    },
-    {
-      "name": "Sampled policy gradient for learning to play the game Agar.io",
-      "publisher": "arXiv preprint",
-      "releaseDate": "2018-01-01",
-      "url": "",
-      "summary": ""
-    }
-  ],
+  "publications": "see_bibliography",
   "skills": [
     {
       "name": "Machine Learning",

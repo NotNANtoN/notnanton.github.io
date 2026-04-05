@@ -1,7 +1,7 @@
 ---
 layout: default
 permalink: /blog/
-title: blog
+title: Blog
 nav: true
 nav_order: 1
 pagination:
@@ -64,29 +64,30 @@ pagination:
         <div class="card-item col">
           <a href="{{ post.url | relative_url }}">
             <div class="card hoverable">
-              <div class="row g-0">
-                <div class="col-md-12">
-                  <div class="card-body">
-                    <div class="float-right">
-                      <i class="fa-solid fa-thumbtack fa-xs"></i>
-                    </div>
-                    <h3 class="card-title">{{ post.title }}</h3>
-                    <p class="card-text">{{ post.description }}</p>
-
-                    {% if post.external_source == blank %}
-                      {% assign read_time = post.content | number_of_words | divided_by: 180 | plus: 1 %}
-                    {% else %}
-                      {% assign read_time = post.feed_content | strip_html | number_of_words | divided_by: 180 | plus: 1 %}
-                    {% endif %}
-                    {% assign year = post.date | date: "%Y" %}
-
-                    <p class="post-meta">
-                      {{ read_time }} min read &nbsp; &middot; &nbsp;
-                      <a href="{{ year | prepend: '/blog/' | prepend: site.baseurl}}">
-                        <i class="fa-solid fa-calendar fa-sm"></i> {{ year }} </a>
-                    </p>
-                  </div>
+              {%- if post.thumbnail %}
+              <div class="card-img-top-wrap">
+                <img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }}" class="card-img-top">
+              </div>
+              {%- endif %}
+              <div class="card-body">
+                <div class="float-right">
+                  <i class="fa-solid fa-thumbtack fa-xs"></i>
                 </div>
+                <h3 class="card-title">{{ post.title }}</h3>
+                <p class="card-text">{{ post.description }}</p>
+
+                {% if post.external_source == blank %}
+                  {% assign read_time = post.content | number_of_words | divided_by: 180 | plus: 1 %}
+                {% else %}
+                  {% assign read_time = post.feed_content | strip_html | number_of_words | divided_by: 180 | plus: 1 %}
+                {% endif %}
+                {% assign year = post.date | date: "%Y" %}
+
+                <p class="post-meta">
+                  {{ read_time }} min read &nbsp; &middot; &nbsp;
+                  <a href="{{ year | prepend: '/blog/' | prepend: site.baseurl}}">
+                    <i class="fa-solid fa-calendar fa-sm"></i> {{ year }} </a>
+                </p>
               </div>
             </div>
           </a>
@@ -106,6 +107,7 @@ pagination:
     {%- endif -%}
 
     {% for post in postlist %}
+    {% if post.featured %}{% continue %}{% endif %}
 
     {% if post.external_source == blank %}
       {% assign read_time = post.content | number_of_words | divided_by: 180 | plus: 1 %}

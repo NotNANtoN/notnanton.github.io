@@ -76,7 +76,9 @@ layout: default
             {% when "skills" %}
               {% include resume/skills.html %}
             {% when "publications" %}
-              {% include resume/publications.html %}
+              <div class="publications">
+                {% bibliography %}
+              </div>
             {% when "languages" %}
               {% include resume/languages.html %}
             {% when "interests" %}

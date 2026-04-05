@@ -6,6 +6,7 @@ tags: reinforcement-learning robotics
 giscus_comments: true
 date: 2026-03-13
 featured: true
+thumbnail: assets/img/robot-matchbox-thumb.jpg
 bibliography: 2026-03-13-robot-learning-setup.bib
 
 authors:
@@ -49,6 +50,13 @@ This post covers about seven months of work on getting a real robot arm to learn
 For a cleaner technical overview of the setup, techniques, and algorithms, see the [companion post]({% post_url 2026-03-13-robot-learning-setup %}). This post is the lab diary.
 
 The high-level goal is language-guided goal setting with quick learning of new tasks. The first concrete sub-goal was simple: grab a matchbox and place it somewhere. That turned out to be far from simple.
+
+<div style="max-width: 320px; margin: 1.5rem auto;">
+  <video autoplay loop muted playsinline style="width: 100%; border-radius: 8px;">
+    <source src="/assets/video/robot-matchbox.webm" type="video/webm">
+  </video>
+  <p style="text-align: center; font-size: 0.85rem; color: var(--global-text-color-light); margin-top: 0.5rem;">The SO-101 picking up a matchbox — one of our first successful imitation learning runs.</p>
+</div>
 
 Everything is built on [LeRobot](https://github.com/huggingface/lerobot) (HuggingFace's robot learning framework), with extensive modifications to support joint-space control, delta action conversion, human reward feedback, torque-aware safety, and various RL improvements.
 

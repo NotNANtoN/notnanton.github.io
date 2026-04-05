@@ -6,6 +6,7 @@ tags: reinforcement-learning robotics imitation-learning
 giscus_comments: true
 date: 2026-03-13
 featured: true
+thumbnail: assets/img/robot-cube-thumb.jpg
 bibliography: 2026-03-13-robot-learning-setup.bib
 
 authors:
@@ -45,6 +46,8 @@ toc:
 This post describes the technical setup behind my robot learning experiments. It's written as a standalone reference for anyone who wants to understand the components, the techniques, and how they fit together.
 
 The goal is to teach a low-cost robot arm to perform manipulation tasks with minimal human effort. The approach combines imitation learning from demonstrations with reinforcement learning for online improvement. Everything runs on a single-GPU workstation and a 120-euro robot arm.
+
+{% include figure.html path="assets/img/robot-cube.jpg" caption="The SO-101 arm at our workspace, ready for cube sorting — one of the main benchmark tasks for our imitation learning experiments." class="img-fluid rounded z-depth-1" zoomable=true %}
 
 For the narrative of how we got here — the timeline, the dead ends, the breakthroughs — see the [companion post]({% post_url 2026-03-13-robot-rl-experiments %}).
 
@@ -111,10 +114,12 @@ Key properties for our setup:
 
 ### SmolVLA
 
-**SmolVLA** <d-cite key="shukor2025smolvla"></d-cite> adapts a vision-language model (VLM) backbone for robot control. The architecture reuses a pretrained SmolVLM-2 and fine-tunes it to output motor commands.
+**SmolVLA** <d-cite key="shukor2025smolvla"></d-cite> adapts a vision-language model (VLM) backbone for robot control. The architecture reuses a pretrained SmolVLM-2 and generates actions via a **Flow-Matching Transformer action expert** — a rectified flow approach where the model learns a velocity field that transports noise to action chunks in a single denoising pass, replacing the CVAE decoder used in ACT.
 
 Key properties:
 - Pretrained VLM backbone — this is critical. Training from scratch (which we accidentally did for months) produces near-random policies.
+- Rectified flow action head — alternating cross-attention (conditioned on VLM embeddings) and self-attention blocks, trained with a flow-matching objective. At inference, a single forward pass through the learned ODE produces an action chunk.
+- Only 450M parameters — designed to run on consumer GPUs or even CPUs.
 - Designed for 512x512 image input, though we often train at 128x128 for speed.
 - More parameter-efficient fine-tuning via LoRA/PEFT is possible but still under development.
 - Better sample efficiency on some tasks due to the pretrained visual features, but more sensitive to hyperparameters than ACT.

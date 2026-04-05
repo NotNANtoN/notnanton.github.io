@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Base -->
+  <rect x="20" y="52" width="24" height="8" rx="3" fill="#4a5899"/>
+  <!-- Lower arm -->
+  <line x1="32" y1="52" x2="26" y2="32" stroke="#6b7dd4" stroke-width="7" stroke-linecap="round"/>
+  <!-- Elbow joint -->
+  <circle cx="26" cy="32" r="4.5" fill="#4a5899"/>
+  <!-- Upper arm - angled out curiously -->
+  <line x1="26" y1="32" x2="14" y2="14" stroke="#6b7dd4" stroke-width="7" stroke-linecap="round"/>
+  <!-- Wrist/head - tilted, curious -->
+  <circle cx="14" cy="14" r="7" fill="#4a5899"/>
+  <!-- Eye highlight ring -->
+  <circle cx="14" cy="13" r="4" fill="#e8ecff"/>
+  <!-- Pupil - looking to the side and up (curious) -->
+  <circle cx="15.5" cy="12" r="2" fill="#2a2a5a"/>
+  <!-- Tiny specular highlight -->
+  <circle cx="14.5" cy="11" r="0.8" fill="#fff"/>
+  <!-- Gripper fingers, slightly open -->
+  <line x1="8" y1="8" x2="5" y2="2" stroke="#4a5899" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="8" x2="22" y2="3" stroke="#4a5899" stroke-width="3" stroke-linecap="round"/>
+</svg>

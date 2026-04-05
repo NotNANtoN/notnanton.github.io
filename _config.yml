@@ -15,7 +15,7 @@ footer_text: >
 keywords: artificial-general-intelligence, agi, cognition, intelligence  # add your own keywords or leave empty
 
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
-icon: 🚀  # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: favicon.svg
 
 url: https://notnanton.github.io # the base hostname & protocol for your site
 baseurl: # the subpath of your site, e.g. /blog/. Leave blank for root
@@ -40,7 +40,7 @@ repo_trophies:
 # will use title and url fields
 # Take a look to https://github.com/jekyll/jekyll-feed for more customization
 
-rss_icon: true
+rss_icon: false
 
 # -----------------------------------------------------------------------------
 # Layout
@@ -136,8 +136,8 @@ related_blog_posts:
 # Giscus comments (RECOMMENDED)
 # Follow instructions on https://giscus.app/ to setup for your repo to fill out the information below.
 giscus:
-  repo:                          # <your-github-user-name>/<your-github-repo-name>
-  repo_id:                       # leave empty or specify your repo_id (see https://giscus.app/)
+  repo: NotNANtoN/notnanton.github.io
+  repo_id:                       # get from https://giscus.app/ after enabling Discussions
   category: Comments             # name of the category under which discussions will be created
   category_id:                   # leave empty or specify your category_id (see https://giscus.app/)
   mapping: title                 # identify discussions by post title
