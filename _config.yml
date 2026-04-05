@@ -271,7 +271,7 @@ display_categories: [] # these categories will be displayed on the front page of
 scholar:
 
   last_name: [Wiehe]
-  first_name: [Anton, A.]
+  first_name: [Anton, Anton O., A.]
 
   style: apa
   locale: en
