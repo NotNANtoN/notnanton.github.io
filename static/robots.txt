@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://notnanton.github.io/sitemap.xml
