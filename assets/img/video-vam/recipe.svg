@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 660" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0d9488"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="660" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
+
+  <!-- ============ row 1: stages 1-3 ============ -->
+
+  <!-- stage 1 -->
+  <g>
+    <rect x="40" y="70" width="250" height="120" rx="10" fill="#ffffff" stroke="#475569"/>
+    <text x="165" y="102" text-anchor="middle" font-size="14.5" font-weight="600" fill="#1e293b">1. Pretrained video model</text>
+    <text x="165" y="128" text-anchor="middle" font-size="12" fill="#64748b">Cosmos-Predict2 2B or LTX-2.5</text>
+    <text x="165" y="146" text-anchor="middle" font-size="12" fill="#64748b">internet-scale video prior:</text>
+    <text x="165" y="164" text-anchor="middle" font-size="12" fill="#64748b">objects, contact, physics</text>
+  </g>
+
+  <line x1="290" y1="130" x2="336" y2="130" stroke="#475569" stroke-width="1.8" marker-end="url(#arr)"/>
+
+  <!-- stage 2 (optional, skipped) -->
+  <g>
+    <rect x="340" y="70" width="290" height="120" rx="10" fill="#fafafa" stroke="#94a3b8" stroke-dasharray="6 4"/>
+    <text x="485" y="102" text-anchor="middle" font-size="14.5" font-weight="600" fill="#64748b">2. Robot-domain fine-tune</text>
+    <text x="485" y="128" text-anchor="middle" font-size="12" fill="#94a3b8">video prediction on large cross-robot</text>
+    <text x="485" y="146" text-anchor="middle" font-size="12" fill="#94a3b8">corpora (Bridge, Open X-Embodiment)</text>
+    <text x="485" y="168" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">optional - we skipped it</text>
+  </g>
+
+  <line x1="630" y1="130" x2="676" y2="130" stroke="#475569" stroke-width="1.8" marker-end="url(#arr)"/>
+
+  <!-- stage 3 -->
+  <g>
+    <rect x="680" y="70" width="290" height="120" rx="10" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="825" y="102" text-anchor="middle" font-size="14.5" font-weight="600" fill="#0f766e">3. Task video fine-tune</text>
+    <text x="825" y="128" text-anchor="middle" font-size="12" fill="#0f766e">LoRA (rank 16), video prediction only,</text>
+    <text x="825" y="146" text-anchor="middle" font-size="12" fill="#0f766e">32 episodes of our own robot data</text>
+    <text x="825" y="168" text-anchor="middle" font-size="12" font-weight="600" fill="#0f766e">action RMSE 14.51 -> 13.06</text>
+  </g>
+
+  <!-- side note: what NOT to do -->
+  <g>
+    <rect x="1030" y="82" width="330" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="1195" y="110" text-anchor="middle" font-size="12.5" font-weight="600" fill="#b91c1c">what not to do (tried it)</text>
+    <text x="1195" y="132" text-anchor="middle" font-size="11.5" fill="#b91c1c">joint video + action co-training collapses</text>
+    <text x="1195" y="149" text-anchor="middle" font-size="11.5" fill="#b91c1c">(24.37 vs 14.51) - protect the video</text>
+    <text x="1195" y="166" text-anchor="middle" font-size="11.5" fill="#b91c1c">objective, train the policy on frozen features</text>
+  </g>
+
+  <!-- split from stage 3 -->
+  <line x1="825" y1="190" x2="825" y2="232" stroke="#475569" stroke-width="1.8"/>
+  <text x="700" y="256" text-anchor="middle" font-size="13.5" font-weight="600" fill="#334155">4. Adapt for observed-only (T=2) inference - proposed, runs in progress</text>
+  <path d="M 825 232 L 390 232 L 390 276" stroke="#475569" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+  <path d="M 825 232 L 900 232 L 900 276" stroke="#475569" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+  <!-- ============ row 2: the two adaptation paths ============ -->
+
+  <!-- path A -->
+  <g>
+    <rect x="170" y="280" width="440" height="128" rx="10" fill="#ffffff" stroke="#475569"/>
+    <text x="390" y="310" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Path A: one-shot linear readout</text>
+    <text x="390" y="336" text-anchor="middle" font-size="12" fill="#64748b">per-position linear head predicts all 14 future latents</text>
+    <text x="390" y="354" text-anchor="middle" font-size="12" fill="#64748b">in one shot from layer-20 T=2 features + fresh LoRA.</text>
+    <text x="390" y="378" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">bet: the features already encode the dynamics</text>
+    <text x="390" y="396" text-anchor="middle" font-size="11.5" fill="#94a3b8">cheap baseline - runs first</text>
+  </g>
+
+  <!-- path B -->
+  <g>
+    <rect x="680" y="280" width="440" height="128" rx="10" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="900" y="310" text-anchor="middle" font-size="14" font-weight="600" fill="#0f766e">Path B: world expert via prefix training</text>
+    <text x="900" y="336" text-anchor="middle" font-size="12" fill="#0f766e">115M diffusion expert denoises the 14 future latents,</text>
+    <text x="900" y="354" text-anchor="middle" font-size="12" fill="#0f766e">reading layer-20 T=2 features as prefix K/V + fresh LoRA.</text>
+    <text x="900" y="378" text-anchor="middle" font-size="12" font-weight="600" fill="#0f766e">trains the exact interface the action expert reads</text>
+    <text x="900" y="396" text-anchor="middle" font-size="11.5" fill="#5eead4">can also generate video from the T=2 trunk</text>
+  </g>
+
+  <!-- converge into stage 5 -->
+  <path d="M 390 408 L 390 448 L 610 448 L 610 486" stroke="#475569" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+  <path d="M 900 408 L 900 448 L 790 448 L 790 486" stroke="#475569" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+  <!-- ============ row 3: policy training ============ -->
+  <g>
+    <rect x="490" y="490" width="420" height="120" rx="10" fill="#fffbeb" stroke="#d97706"/>
+    <text x="700" y="522" text-anchor="middle" font-size="14.5" font-weight="600" fill="#92400e">5. Train the policy</text>
+    <text x="700" y="548" text-anchor="middle" font-size="12" fill="#92400e">one T=2 trunk forward per window (204 ms) -> hash-validated</text>
+    <text x="700" y="566" text-anchor="middle" font-size="12" fill="#92400e">feature cache -> train the SmolExpert action head on top</text>
+    <text x="700" y="590" text-anchor="middle" font-size="12" font-weight="600" fill="#b45309">expert reaches its best score in under an hour</text>
+  </g>
+
+  <text x="40" y="636" font-size="12" fill="#94a3b8">Steps 1-3 are the standard recipe. Step 4 is the open experiment: make cheap observed-only features carry what the full 16-frame forward computes.</text>
+</svg>
