@@ -21,9 +21,18 @@
 <SiteHead title="CV" description="Curriculum vitae of Anton Wiehe." canonicalPath="/cv/" />
 
 <div class="wide-container">
-	<header class="mx-auto mb-10 max-w-3xl">
-		<p class="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent">Background</p>
-		<h1 class="text-4xl font-bold tracking-tight">Curriculum vitae</h1>
+	<header class="mx-auto mb-10 flex max-w-3xl items-center justify-between gap-6">
+		<div>
+			<p class="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent">Background</p>
+			<h1 class="text-4xl font-bold tracking-tight">Curriculum vitae</h1>
+		</div>
+		<img
+			class="size-28 shrink-0 rounded-2xl border border-border object-cover sm:size-32"
+			src="/assets/img/face-zoom.png"
+			alt="Portrait of Anton Wiehe"
+			loading="lazy"
+			decoding="async"
+		/>
 	</header>
 
 	<div class="grid gap-10 lg:grid-cols-[12rem_minmax(0,48rem)] lg:justify-center lg:gap-12">

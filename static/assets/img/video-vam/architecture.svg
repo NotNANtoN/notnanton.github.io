@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0d9488"/>
+    </marker>
+    <marker id="arrDash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="560" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
+
+  <!-- ======================= main pipeline row (y 120-260) ======================= -->
+
+  <!-- camera frames stack -->
+  <g>
+    <rect x="46" y="142" width="86" height="66" rx="4" fill="#e2e8f0" stroke="#94a3b8"/>
+    <rect x="38" y="150" width="86" height="66" rx="4" fill="#e2e8f0" stroke="#94a3b8"/>
+    <rect x="30" y="158" width="86" height="66" rx="4" fill="#ffffff" stroke="#475569"/>
+    <text x="73" y="186" text-anchor="middle" font-size="12" fill="#334155">5 RGB</text>
+    <text x="73" y="202" text-anchor="middle" font-size="12" fill="#334155">frames</text>
+    <text x="80" y="248" text-anchor="middle" font-size="11.5" fill="#64748b">480x640, last 0.5 s</text>
+  </g>
+
+  <line x1="136" y1="185" x2="176" y2="185" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- VAE -->
+  <g>
+    <rect x="180" y="150" width="112" height="70" rx="8" fill="#ffffff" stroke="#475569"/>
+    <text x="236" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Video VAE</text>
+    <text x="236" y="200" text-anchor="middle" font-size="11.5" fill="#64748b">Cosmos tokenizer</text>
+  </g>
+
+  <line x1="296" y1="185" x2="336" y2="185" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- latents -->
+  <g>
+    <rect x="348" y="146" width="70" height="56" rx="4" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="340" y="156" width="70" height="56" rx="4" fill="#eff6ff" stroke="#60a5fa"/>
+    <text x="375" y="180" text-anchor="middle" font-size="12" fill="#1d4ed8">2 observed</text>
+    <text x="375" y="196" text-anchor="middle" font-size="12" fill="#1d4ed8">latents</text>
+    <text x="379" y="240" text-anchor="middle" font-size="11.5" fill="#64748b">16 ch, 60x80</text>
+  </g>
+
+  <line x1="422" y1="185" x2="462" y2="185" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- DiT container -->
+  <g>
+    <rect x="466" y="96" width="420" height="178" rx="10" fill="#ffffff" stroke="#475569"/>
+    <text x="676" y="122" text-anchor="middle" font-size="14.5" font-weight="600" fill="#1e293b">Cosmos-Predict2 2B video DiT, state_t = 2</text>
+
+    <!-- 28 block strips: blocks 0-19 teal, 20-27 grey -->
+    <!-- strip width 11, gap 3, start x=486, y=138, h=92 -->
+    <g>
+      <rect x="486" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="500" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="514" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="528" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="542" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="556" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="570" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="584" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="598" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="612" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="626" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="640" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="654" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="668" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="682" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="696" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="710" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="724" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="738" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/><rect x="752" y="138" width="11" height="92" rx="2" fill="#99f6e4" stroke="#0d9488"/>
+      <rect x="772" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="786" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="800" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="814" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="828" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="842" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="856" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/><rect x="870" y="138" width="11" height="92" rx="2" fill="#f1f5f9" stroke="#cbd5e1"/>
+    </g>
+
+    <!-- tap line after block 19 -->
+    <line x1="766.5" y1="132" x2="766.5" y2="236" stroke="#0d9488" stroke-width="2" stroke-dasharray="4 3"/>
+
+    <text x="624" y="248" text-anchor="middle" font-size="11.5" fill="#0f766e">blocks 0-19, LoRA (rank 16)</text>
+    <text x="828" y="248" text-anchor="middle" font-size="11.5" fill="#94a3b8">20-27 skipped</text>
+    <text x="766" y="266" text-anchor="middle" font-size="12" font-weight="600" fill="#0d9488">layer-20 tap</text>
+  </g>
+
+  <!-- tap output -->
+  <line x1="766.5" y1="96" x2="766.5" y2="66" stroke="#0d9488" stroke-width="1.8"/>
+  <line x1="766.5" y1="66" x2="948" y2="66" stroke="#0d9488" stroke-width="1.8"/>
+  <line x1="948" y1="66" x2="948" y2="140" stroke="#0d9488" stroke-width="1.8" marker-end="url(#arrTeal)"/>
+
+  <!-- tokens box -->
+  <g>
+    <rect x="906" y="146" width="106" height="70" rx="8" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="959" y="176" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f766e">2,400 tokens</text>
+    <text x="959" y="196" text-anchor="middle" font-size="11.5" fill="#0f766e">dim 2048</text>
+  </g>
+
+  <line x1="1012" y1="181" x2="1058" y2="181" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="1035" y="204" text-anchor="middle" font-size="11" fill="#64748b">prefix K/V</text>
+
+  <!-- action expert -->
+  <g>
+    <rect x="1062" y="128" width="180" height="108" rx="10" fill="#ffffff" stroke="#475569"/>
+    <text x="1152" y="156" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Action expert</text>
+    <text x="1152" y="176" text-anchor="middle" font-size="11.5" fill="#64748b">SmolVLA-derived, 115M</text>
+    <text x="1152" y="192" text-anchor="middle" font-size="11.5" fill="#64748b">flow matching</text>
+    <text x="1152" y="208" text-anchor="middle" font-size="11.5" fill="#64748b">10 Euler steps</text>
+  </g>
+
+  <!-- joint state input -->
+  <line x1="1152" y1="286" x2="1152" y2="240" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="1152" y="304" text-anchor="middle" font-size="11.5" fill="#64748b">joint state (6)</text>
+
+  <!-- action output -->
+  <line x1="1242" y1="181" x2="1288" y2="181" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g>
+    <rect x="1292" y="150" width="86" height="62" rx="8" fill="#fef3c7" stroke="#d97706"/>
+    <text x="1335" y="176" text-anchor="middle" font-size="12.5" font-weight="600" fill="#92400e">30x6 action</text>
+    <text x="1335" y="193" text-anchor="middle" font-size="12.5" font-weight="600" fill="#92400e">chunk, 10 Hz</text>
+  </g>
+
+  <!-- ======================= latency brackets ======================= -->
+  <g stroke="#94a3b8" stroke-width="1.2" fill="none">
+    <path d="M 30 330 L 30 340 L 886 340 L 886 330"/>
+    <path d="M 1062 330 L 1062 340 L 1242 340 L 1242 330"/>
+  </g>
+  <text x="458" y="360" text-anchor="middle" font-size="12.5" font-weight="600" fill="#475569">feature extraction: 204 ms (T=2) vs 1,163 ms (full 16-frame forward)</text>
+  <text x="1152" y="360" text-anchor="middle" font-size="12.5" font-weight="600" fill="#475569">~90 ms</text>
+
+  <!-- ======================= world expert branch (training / eval only) ======================= -->
+  <line x1="959" y1="216" x2="959" y2="430" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <line x1="959" y1="430" x2="700" y2="430" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrDash)"/>
+  <g>
+    <rect x="420" y="396" width="276" height="70" rx="10" fill="#fafafa" stroke="#94a3b8" stroke-dasharray="6 4"/>
+    <text x="558" y="422" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">World expert, 115M (training / video eval)</text>
+    <text x="558" y="441" text-anchor="middle" font-size="11.5" fill="#64748b">denoises the 14 future VAE latents from the same</text>
+    <text x="558" y="456" text-anchor="middle" font-size="11.5" fill="#64748b">layer-20 prefix K/V, decode -> predicted video</text>
+  </g>
+  <text x="972" y="416" font-size="11" fill="#94a3b8">same interface</text>
+
+  <!-- title footer -->
+  <text x="30" y="520" font-size="12" fill="#94a3b8">One backbone forward per action chunk - no video is generated at inference time. LoRA-adapted blocks in teal; grey blocks never execute.</text>
+</svg>
