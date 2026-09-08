@@ -18,7 +18,7 @@ giscus: true
 
 Can pretrained video representations help a robot learn actions from a few demonstrations? Video models are trained to predict how scenes change; I wanted to test whether those features also help with action learning. I tried NVIDIA Cosmos-Predict2 2B and Lightricks LTX-2.5 as feature extractors for an SO-101 learning to take a cube out of a box, using one RTX 4090.
 
-I evaluated predicted actions on held-out recordings; I have not measured task success on the robot yet. The implementation builds on [LeRobot](https://github.com/huggingface/lerobot) and [mimic-video](https://github.com/mimic-video/mimic-video). Video generation offers a useful visual check, but the policy has a different job: predict actions from internal features.
+I evaluated predicted actions on held-out recordings; I have not measured task success on the robot yet. The implementation builds on [LeRobot](https://github.com/huggingface/lerobot) and [mimic-video](https://github.com/mimic-video/mimic-video). Upstream mimic-video couples a video world model with a from-scratch flow-matching DiT action decoder (referred to as World2Action). Video generation offers a useful visual check, but the policy has a different job: predict actions from internal features.
 
 <figure class="post-figure">
   <video controls loop muted playsinline preload="metadata" width="1920" height="544" poster="/assets/img/video-vam/cosmos-ep19-three-way.jpg">
@@ -44,7 +44,9 @@ Here, T counts latent frames, not RGB frames. The two Cosmos paths use the same 
   <figcaption>Same observed frames and video-LoRA backbone. T=2 drops 14 noise slots before the layer-20 forward. Timings cover feature extraction only; pooling also changes, and action errors are historical recorded results.</figcaption>
 </figure>
 
-A small pretrained SmolExpert action head reads the visual features through prefix key/value attention, combines them with current joint state, and uses flow matching to predict a 30-step action chunk.
+To map video representations to robot trajectories, I benchmarked two action head architectures:
+1. **World2Action**: The native mimic-video action head, a flow-matching Diffusion Transformer trained from scratch to cross-attend to the video tokens.
+2. **SmolExpert**: An action head initialized from SmolVLA's pretrained action expert. It reads visual features through prefix key/value attention, combines them with current joint state, and predicts a 30-step action chunk via flow matching.
 
 I freeze the backbone and cache features before training the action head. That makes head experiments cheaper to repeat, but does not remove feature extraction during live operation. LTX uses a separate extractor with a block-34 feature tap.
 
@@ -54,13 +56,13 @@ I freeze the backbone and cache features before training the action head. That m
 |---|---:|
 | Repeat current joint state | 18.86 |
 | SmolVLA, train-only normalization | 14.93 |
-| Frozen Cosmos + World2Action | 14.51 |
-| Frozen Cosmos + SmolExpert | 13.65 |
+| Frozen Cosmos + World2Action (mimic-video from-scratch DiT) | 14.51 |
+| Frozen Cosmos + SmolExpert (SmolVLA pretrained head) | 13.65 |
 | Video-LoRA Cosmos, T=16 + SmolExpert | 13.06 |
 | Video-LoRA Cosmos, T=2 + SmolExpert | 13.74 |
 | Frozen LTX-2.5 + SmolExpert | 13.84 |
 
-Two changes need separating. On identical frozen Cosmos features, replacing the from-scratch World2Action decoder with pretrained SmolExpert changed the recorded result from 14.51 to 13.65. SmolExpert reached its best checkpoint in about 2.5 hours of head training.
+Two changes need separating. First, the action decoder: on identical frozen Cosmos features, replacing the native from-scratch mimic-video World2Action decoder with the pretrained SmolExpert action head improved the recorded score from 14.51 to 13.65. Reusing pretrained action weights from SmolVLA delivered superior performance over the from-scratch mimic-video DiT and converged quickly, reaching its best checkpoint in about 2.5 hours of head training.
 
 Task video adaptation was a separate experiment: train a video-prediction LoRA, freeze it, then train the action head. That run reached 13.06. However, a frozen Cosmos alternative using causal-prefix VAE encoding recorded 13.81 rather than the older 13.65. The preprocessing and evaluation history prevents treating the difference as a clean LoRA-only effect.
 
