@@ -16,7 +16,7 @@
         - "Grade: 1.0 — Cum Laude"
         - International, research-oriented program focused on artificial intelligence (5% acceptance rate).
         - "Thesis: Domain Adaptation for Multi-Modal Foundation Models (at inovex GmbH)"
-    - title: B.Sc. Computing Science
+    - title: B.Sc. Artificial Intelligence
       institution: Rijksuniversiteit Groningen, Netherlands
       year: 2015 - 2018
 
@@ -55,6 +55,7 @@
       description:
         - Developed AI-based medical applications, including critical care prediction models published in BRAIN journal.
         - Created Plazmapunk, an AI-powered music video generation product.
+        - Now limited to occasional Plazmapunk maintenance and model updates.
     - title: Master Thesis
       institution: inovex GmbH, Hamburg
       year: 2021 - 2022

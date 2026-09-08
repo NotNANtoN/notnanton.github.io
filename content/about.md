@@ -6,7 +6,7 @@ profile:
   more_info: "<p>Hamburg, Germany</p>"
 ---
 
-AI researcher and entrepreneur working on adaptive intelligence — lately with a robot arm on my desk. In a small home lab, a low-cost SO-101 arm learns manipulation from human demonstrations and then keeps improving online: imitation policies like ACT and SmolVLA on the [LeRobot](https://github.com/huggingface/lerobot) stack, learned reward models, and human-in-the-loop reinforcement learning, all on a single GPU. I write up both the [technical setup](/blog/2026/robot-learning-setup/) and the [seven-month lab diary](/blog/2026/robot-rl-experiments/), dead ends included.
+AI researcher and entrepreneur working on adaptive intelligence — lately with a robot arm on my desk. In a small home lab, I work on learning manipulation from human demonstrations with a low-cost SO-101 arm, using imitation policies like ACT and SmolVLA on the [LeRobot](https://github.com/huggingface/lerobot) stack. I also experiment with online reinforcement learning using learned reward models and human-in-the-loop feedback, all on a single GPU. I write up both the [technical setup](/blog/2026/robot-learning-setup/) and the [seven-month lab diary](/blog/2026/robot-rl-experiments/), dead ends included.
 
 The other half of my work is taking models the last mile. At [Pharos Labs](https://pharoslabs.de) I lead Regulaido, where AI-generated regulatory documents have to survive real scrutiny — every claim traceable to a source, deployed into enterprise environments alongside the writers who use it. Before that I co-founded [AdaLab](https://adalab.ai), where our critical care prediction work was published in BRAIN and our generative music video product Plazmapunk reached 100,000 creators.
 
