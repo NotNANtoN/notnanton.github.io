@@ -37,12 +37,14 @@ The metric is masked global aggregate RMSE over valid action targets; lower is b
 
 ## From video features to actions
 
-The Cosmos path is:
+Here, T counts latent frames, not RGB frames. The two Cosmos paths use the same video-LoRA backbone, but different input lengths and policy features.
 
-1. A causal video VAE encodes five observed RGB frames into two latent frames. Here, T counts latent frames, not RGB frames.
-2. The T=16 path adds 14 noisy future latent slots, not actual future observations. One DiT forward stops at layer 20. Its 19,200 raw tokens become 4,800 tokens through factor-two spatial pooling across all 16 slots.
-3. The observed-only T=2 path omits those future slots and retains 2,400 unpooled tokens. It changes the computation as well as the number of tokens.
-4. A small pretrained SmolExpert action head reads the visual features through prefix key/value attention, alongside current joint state, and uses flow matching to predict the 30-step action chunk.
+<figure class="post-figure" data-zoomable>
+  <img src="/assets/img/video-vam/cosmos-t16-t2-pipeline.svg" alt="Parallel Cosmos paths: T=16 adds future noise slots before its transformer forward and pools the features; T=2 runs without those slots and keeps unpooled features. Separate action heads predict 30 actions." loading="lazy">
+  <figcaption>Same observed frames and video-LoRA backbone. T=2 drops 14 noise slots before the layer-20 forward. Timings cover feature extraction only; pooling also changes, and action errors are historical recorded results.</figcaption>
+</figure>
+
+A small pretrained SmolExpert action head reads the visual features through prefix key/value attention, combines them with current joint state, and uses flow matching to predict a 30-step action chunk.
 
 I freeze the backbone and cache features before training the action head. That makes head experiments cheaper to repeat, but does not remove feature extraction during live operation. LTX uses a separate extractor with a block-34 feature tap.
 
@@ -68,13 +70,20 @@ One joint video/action training configuration performed poorly. That is evidence
 
 Cosmos feature extraction measured 1,163 ms for T=16 and 204 ms for T=2: a 5.7× speedup on these paths. The associated action error increased by 0.68, from 13.06 to 13.74. Because the policy also changes pooling and feature context, this is not a pure frame-count ablation.
 
-The T=2 head reached its best checkpoint after about 46 minutes, excluding feature extraction and video-LoRA pretraining. Extraction latency is not end-to-end reaction time.
+The T=2 head reached its own best checkpoint after about 46 minutes of head training on cached features, excluding feature extraction and video-LoRA pretraining. Extraction latency is not end-to-end reaction time.
+
+<figure class="post-figure" data-zoomable>
+  <img src="/assets/img/video-vam/cosmos-t16-t2-training.svg" alt="Two stacked panels comparing validation action RMSE for T=16 and T=2 against optimizer steps and elapsed head-training loop time." loading="lazy">
+  <figcaption>Two archived single-seed W&B runs: T=16 with pool2 (blue) and T=2 unpooled (orange), using the same video-LoRA backbone, batch size 8, and 88 fixed held-out observation windows. Panels show validation action RMSE against optimizer steps and elapsed head-training loop time on cached features; time excludes video-LoRA training and cache creation.</figcaption>
+</figure>
+
+The T=2 run processed head-training steps faster, but did not reach every error threshold sooner. Cheaper feature extraction should also reduce cache-building time; comparable total cache-build timings were not recoverable for these runs.
 
 For CPU-streamed LTX, reducing the latent sequence from eight frames to two barely changed extraction: 1,243 versus 1,228 ms. GPU-resident INT4 reached 780 ms, but its downstream policy quality has not been validated.
 
 ## Representation distillation
 
-Video-generation loss is not the only way to adapt the observed-only representation. I also tried matching features directly:
+Distillation tries to keep the short inference path while training its features to resemble those from the longer path. Instead of using video-generation loss alone, I also tried matching features directly:
 
 - A frozen T=16 teacher receives the same causal five-frame RGB input as the T=2 student. After the full-context forward, its layer-20 features from the **first two conditioning slots** become the targets; these are not future-video targets.
 - The student trains LoRA adapters in blocks 0–19 to match those cached teacher features with squared-error and cosine-similarity losses.

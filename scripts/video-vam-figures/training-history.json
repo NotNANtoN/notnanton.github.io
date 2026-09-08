@@ -1,0 +1,613 @@
+{
+	"schema_version": 1,
+	"provenance": {
+		"research_repository": "lerobot-video-vam",
+		"source_kind": "Archived local W&B history records, scanned read-only to EOF; no live API export.",
+		"archive_paths_relative_to": "research repository root",
+		"live_api_verified": false,
+		"live_api_limitation": "Authenticated W&B API access was unavailable; no API key was configured. Numerical records were validated against local archives.",
+		"wandb": {
+			"entity": "hubnemo-hugging-face",
+			"project": "video-vam-world2action",
+			"url_provenance": "Entity documented in docs/video_vam_cube_out_of_box_leaderboard.md:5; project and run IDs verified in archives. URLs not live-verified."
+		},
+		"point_schema": {
+			"step": "Integer optimizer update count; archive step equals _step.",
+			"full30_mixed_rmse": "Float copied exactly from val_aggregate_rmse_deg.",
+			"wall_clock_seconds": "Float copied exactly from wall_clock_seconds; never _runtime or _timestamp."
+		},
+		"metric": {
+			"history_field": "val_aggregate_rmse_deg",
+			"horizon": 30,
+			"action_dimensions": 6,
+			"units": "Mixed units: five arm joints in degrees and gripper position on [0, 100]; not pure degrees.",
+			"aggregation": "Square root of globally summed squared error divided by globally counted valid scalar actions; action_is_pad excludes padding from both numerator and denominator.",
+			"source": "scripts/video_vam/train_smolexpert_on_cosmos.py:550-595"
+		},
+		"time": {
+			"history_field": "wall_clock_seconds",
+			"unit": "seconds",
+			"plotted_unit": "minutes",
+			"plotted_conversion": "wall_clock_seconds / 60",
+			"origin": "Trainer perf_counter timer starts after cache/model/normalizer setup and W&B initialization.",
+			"timestamp_boundary": "Sampled after the optimizer update, before the current validation; includes earlier evaluation, checkpointing, cached-feature I/O and head-loop overhead.",
+			"excludes": [
+				"Video-LoRA training",
+				"Feature-cache creation",
+				"Pre-loop cache/model/normalizer setup"
+			],
+			"not_used": [
+				"_runtime",
+				"_timestamp",
+				"constant-offset correction",
+				"linear time interpolation"
+			],
+			"source": "scripts/video_vam/train_smolexpert_on_cosmos.py:917,993-1022,1043-1075",
+			"legacy_export_note": "eff_lora.json used _runtime/3600, while eff_statet2.json used wall_clock_seconds/3600. This export uses exact wall_clock_seconds for both."
+		},
+		"dataset": {
+			"repo_id": "hubnemo/cube_out_of_box_dataset",
+			"revision": "243370c3c08bcbd860133c4a0d658ea7c1d2e77e",
+			"train_episodes": [
+				0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+				25, 26, 27, 28, 29, 30, 31
+			],
+			"validation_episodes": [32, 33, 34, 35, 36, 37, 38, 39],
+			"train_cache_stride": 3,
+			"validation_cache_stride": 20
+		},
+		"fixed_split": {
+			"cache_relative_path": "splits/rehearsal-stride20.json",
+			"sha256": "4984059788d2648688aec8c0d8e7986b45411a876a6282d970d44104b8b84b6a",
+			"validation_anchors": 88,
+			"probe_seed": 0,
+			"probe_algorithm": "python_random_box_muller_v1",
+			"sampling": "Persisted per-anchor sample_seed, tau_a and epsilon[30][6]; historical protocol, not sampling revision 1.1.",
+			"verification": "Existing split file checksum matches both archived run configs."
+		},
+		"shared_training": {
+			"batch_size": 8,
+			"gradient_accumulation_steps": 1,
+			"effective_batch_size": 8,
+			"learning_rate": 0.0001,
+			"seed": 0,
+			"expert_checkpoint": "lerobot/smolvla_base",
+			"trainable_head_parameters": 100832016,
+			"optimizer": "AdamW",
+			"optimizer_betas": [0.9, 0.95],
+			"weight_decay": 1e-10,
+			"gradient_clip": 10,
+			"warmup_steps": 1000,
+			"scheduler": "linear warmup then cosine decay configured for 500000 steps",
+			"validation_every_steps": 1000,
+			"patience_validations": 10,
+			"min_delta": 0,
+			"action_sampling_steps": 10,
+			"gpu": "NVIDIA GeForce RTX 4090",
+			"mixer": "none"
+		},
+		"feature_extraction": {
+			"backbone": "Cosmos-Predict2-2B",
+			"adaptation": "Both configurations use the same frozen Video-LoRA adaptation; undistilled T2 does not mean unadapted Cosmos.",
+			"adapter_cache_relative_path": "runs/cosmos2b-video-lora-20260828/paused-step6000/best_lora.safetensors",
+			"adaptation_provenance": [
+				"scripts/video_vam/run_videolora_smolexpert_from_best.sh:9-20,187-219",
+				"scripts/video_vam/run_cosmos_statet2_unpooled_smolexpert.sh:9-18,60-74"
+			],
+			"layer": 20,
+			"vae_input_mode": "observed_prefix",
+			"sigma": 80,
+			"seed": 0
+		},
+		"limitations": [
+			"One training seed per configuration; no confidence intervals or statistical-significance claim.",
+			"Historical comparison, not an isolated temporal-length ablation: temporal length, spatial pooling and context token count change together.",
+			"Recorded Git revisions differ and are not exact dirty working-tree snapshots. In particular, T16 history contains fields absent from its recorded committed trainer.",
+			"Best scores are validation-selected at different steps; time to each runs own best is not time to equal quality.",
+			"Original feature-cache manifests/tensors and the referenced LoRA artifact were unavailable; their contents and total preprocessing duration could not be revalidated.",
+			"No live W&B API verification. No distillation series are included."
+		],
+		"numeric_verification": "All 48+37 measured validation records match the earlier research exports in step and RMSE. Trainer times are copied directly from each archive, not inherited from the inconsistent earlier hours columns."
+	},
+	"series": [
+		{
+			"run_id": "ixzworl4",
+			"run_name": "cosmos2b-videolora-pool2-smolexpert-20260828",
+			"run_url": "https://wandb.ai/hubnemo-hugging-face/video-vam-world2action/runs/ixzworl4",
+			"label": "T=16 · spatial pool2",
+			"source_archive": {
+				"path": "wandb/run-20260828_151130-ixzworl4/run-ixzworl4.wandb",
+				"sha256": "ff8277397a6d0b1bb8925bda68fd3606e0a15d7b03f1924d67f1ffc97b66eb5b"
+			},
+			"source_config": {
+				"path": "wandb/run-20260828_151130-ixzworl4/files/config.yaml",
+				"sha256": "d68d28ddfb4377abc001f75f5ca810b9a7b65ccb5f2732469da8828ea03c2ee3"
+			},
+			"source_metadata": {
+				"path": "wandb/run-20260828_151130-ixzworl4/files/wandb-metadata.json",
+				"sha256": "7c8180174fe4645c309ad06cfd7c347c4c34ff5ec34d16a46d7f99761742e8f4"
+			},
+			"recorded_git_revision": "8318cb9872499e59922bf537a12bcca61eecb72e",
+			"context": {
+				"latent_frames": 16,
+				"spatial_transform": "pool2",
+				"tokens": 4800,
+				"channels": 2048,
+				"dtype": "bfloat16"
+			},
+			"configured_max_hours": 4,
+			"stop_reason": "validation_plateau",
+			"expected_point_count": 48,
+			"best": {
+				"step": 38000,
+				"full30_mixed_rmse": 13.058368685598639,
+				"wall_clock_seconds": 6879.7633914150065
+			},
+			"points_sha256": "35eafefc4633caf359e1a53bcdf29272f3b54a5b77924b0f53bc917c9c969c25",
+			"points": [
+				{
+					"step": 1000,
+					"full30_mixed_rmse": 22.380732344579165,
+					"wall_clock_seconds": 172.09088510891888
+				},
+				{
+					"step": 2000,
+					"full30_mixed_rmse": 16.014383449204054,
+					"wall_clock_seconds": 356.29992717294954
+				},
+				{
+					"step": 3000,
+					"full30_mixed_rmse": 15.148780335758365,
+					"wall_clock_seconds": 537.9687685619574
+				},
+				{
+					"step": 4000,
+					"full30_mixed_rmse": 15.563652334037814,
+					"wall_clock_seconds": 718.9332411449868
+				},
+				{
+					"step": 5000,
+					"full30_mixed_rmse": 15.081107566478611,
+					"wall_clock_seconds": 900.2142302619759
+				},
+				{
+					"step": 6000,
+					"full30_mixed_rmse": 14.074292035312617,
+					"wall_clock_seconds": 1081.935473534977
+				},
+				{
+					"step": 7000,
+					"full30_mixed_rmse": 14.374731728079526,
+					"wall_clock_seconds": 1263.105419481988
+				},
+				{
+					"step": 8000,
+					"full30_mixed_rmse": 14.272559920238571,
+					"wall_clock_seconds": 1444.9497694079764
+				},
+				{
+					"step": 9000,
+					"full30_mixed_rmse": 14.00630880808751,
+					"wall_clock_seconds": 1625.9230468159076
+				},
+				{
+					"step": 10000,
+					"full30_mixed_rmse": 13.890700963850819,
+					"wall_clock_seconds": 1805.9666113309795
+				},
+				{
+					"step": 11000,
+					"full30_mixed_rmse": 13.988159806692368,
+					"wall_clock_seconds": 1987.6670005699852
+				},
+				{
+					"step": 12000,
+					"full30_mixed_rmse": 14.164894519107234,
+					"wall_clock_seconds": 2168.657293652999
+				},
+				{
+					"step": 13000,
+					"full30_mixed_rmse": 13.655781870553922,
+					"wall_clock_seconds": 2349.6458491679514
+				},
+				{
+					"step": 14000,
+					"full30_mixed_rmse": 13.698408442488821,
+					"wall_clock_seconds": 2530.1799550969154
+				},
+				{
+					"step": 15000,
+					"full30_mixed_rmse": 13.615395336538976,
+					"wall_clock_seconds": 2711.7462879909435
+				},
+				{
+					"step": 16000,
+					"full30_mixed_rmse": 13.437224991137029,
+					"wall_clock_seconds": 2893.000065836939
+				},
+				{
+					"step": 17000,
+					"full30_mixed_rmse": 13.493402878270034,
+					"wall_clock_seconds": 3074.162031057989
+				},
+				{
+					"step": 18000,
+					"full30_mixed_rmse": 13.29294791210843,
+					"wall_clock_seconds": 3255.7144962099846
+				},
+				{
+					"step": 19000,
+					"full30_mixed_rmse": 13.262118648306203,
+					"wall_clock_seconds": 3437.2797401360003
+				},
+				{
+					"step": 20000,
+					"full30_mixed_rmse": 13.456582079318338,
+					"wall_clock_seconds": 3618.1438634719234
+				},
+				{
+					"step": 21000,
+					"full30_mixed_rmse": 13.43572378305378,
+					"wall_clock_seconds": 3798.7668105399935
+				},
+				{
+					"step": 22000,
+					"full30_mixed_rmse": 13.322159057333463,
+					"wall_clock_seconds": 3979.237340578926
+				},
+				{
+					"step": 23000,
+					"full30_mixed_rmse": 13.41500882546331,
+					"wall_clock_seconds": 4160.505160175962
+				},
+				{
+					"step": 24000,
+					"full30_mixed_rmse": 13.34211753619398,
+					"wall_clock_seconds": 4341.719906942919
+				},
+				{
+					"step": 25000,
+					"full30_mixed_rmse": 13.196746881061447,
+					"wall_clock_seconds": 4522.994940049015
+				},
+				{
+					"step": 26000,
+					"full30_mixed_rmse": 13.202858979724098,
+					"wall_clock_seconds": 4704.427872983972
+				},
+				{
+					"step": 27000,
+					"full30_mixed_rmse": 13.316882865653387,
+					"wall_clock_seconds": 4886.022043625941
+				},
+				{
+					"step": 28000,
+					"full30_mixed_rmse": 13.288033951178173,
+					"wall_clock_seconds": 5066.735386330984
+				},
+				{
+					"step": 29000,
+					"full30_mixed_rmse": 13.492115293242087,
+					"wall_clock_seconds": 5248.327706586919
+				},
+				{
+					"step": 30000,
+					"full30_mixed_rmse": 13.273311393650943,
+					"wall_clock_seconds": 5429.092014094931
+				},
+				{
+					"step": 31000,
+					"full30_mixed_rmse": 13.318437494768437,
+					"wall_clock_seconds": 5609.966907822993
+				},
+				{
+					"step": 32000,
+					"full30_mixed_rmse": 13.445873969347916,
+					"wall_clock_seconds": 5791.194155444973
+				},
+				{
+					"step": 33000,
+					"full30_mixed_rmse": 13.350158596919247,
+					"wall_clock_seconds": 5972.683514387929
+				},
+				{
+					"step": 34000,
+					"full30_mixed_rmse": 13.393650212812508,
+					"wall_clock_seconds": 6154.1836800549645
+				},
+				{
+					"step": 35000,
+					"full30_mixed_rmse": 13.07318812394762,
+					"wall_clock_seconds": 6335.736602558987
+				},
+				{
+					"step": 36000,
+					"full30_mixed_rmse": 13.118962385522737,
+					"wall_clock_seconds": 6517.125233710976
+				},
+				{
+					"step": 37000,
+					"full30_mixed_rmse": 13.313422890017405,
+					"wall_clock_seconds": 6698.485220748
+				},
+				{
+					"step": 38000,
+					"full30_mixed_rmse": 13.058368685598639,
+					"wall_clock_seconds": 6879.7633914150065
+				},
+				{
+					"step": 39000,
+					"full30_mixed_rmse": 13.230989435317174,
+					"wall_clock_seconds": 7060.838381850976
+				},
+				{
+					"step": 40000,
+					"full30_mixed_rmse": 13.243004381061699,
+					"wall_clock_seconds": 7240.879790353007
+				},
+				{
+					"step": 41000,
+					"full30_mixed_rmse": 13.14597651950454,
+					"wall_clock_seconds": 7420.76458413701
+				},
+				{
+					"step": 42000,
+					"full30_mixed_rmse": 13.100109001186228,
+					"wall_clock_seconds": 7601.685307862004
+				},
+				{
+					"step": 43000,
+					"full30_mixed_rmse": 13.187338266989194,
+					"wall_clock_seconds": 7782.641958772903
+				},
+				{
+					"step": 44000,
+					"full30_mixed_rmse": 13.273693540320174,
+					"wall_clock_seconds": 7963.906024605967
+				},
+				{
+					"step": 45000,
+					"full30_mixed_rmse": 13.27957010783935,
+					"wall_clock_seconds": 8145.177280640928
+				},
+				{
+					"step": 46000,
+					"full30_mixed_rmse": 13.28991843078324,
+					"wall_clock_seconds": 8326.220735621988
+				},
+				{
+					"step": 47000,
+					"full30_mixed_rmse": 13.09985414580635,
+					"wall_clock_seconds": 8507.144793447922
+				},
+				{
+					"step": 48000,
+					"full30_mixed_rmse": 13.21169222693636,
+					"wall_clock_seconds": 8688.223294319003
+				}
+			]
+		},
+		{
+			"run_id": "jri7vehq",
+			"run_name": "cosmos2b-videolora-statet2-unpooled-smolexpert-20260828",
+			"run_url": "https://wandb.ai/hubnemo-hugging-face/video-vam-world2action/runs/jri7vehq",
+			"label": "T=2 · unpooled (undistilled)",
+			"source_archive": {
+				"path": "wandb/run-20260828_214455-jri7vehq/run-jri7vehq.wandb",
+				"sha256": "3481e089e093d4325f4bb9c03e6d2d1280d59d449ba8b8fa912026d18123364d"
+			},
+			"source_config": {
+				"path": "wandb/run-20260828_214455-jri7vehq/files/config.yaml",
+				"sha256": "ce6fa3bf78c2e33bc371a0feebe0481aff6c0bff25a2b77951b27977f6c7d524"
+			},
+			"source_metadata": {
+				"path": "wandb/run-20260828_214455-jri7vehq/files/wandb-metadata.json",
+				"sha256": "afb54f44a6709cf1cb0aa59e33b745e0dbc66a70624f3222f601049b9ed555e4"
+			},
+			"recorded_git_revision": "dcb758c6cf2860b6cdfe88c7d8769e054ac765de",
+			"context": {
+				"latent_frames": 2,
+				"spatial_transform": "none",
+				"tokens": 2400,
+				"channels": 2048,
+				"dtype": "bfloat16"
+			},
+			"configured_max_hours": 12,
+			"stop_reason": "validation_plateau",
+			"expected_point_count": 37,
+			"best": {
+				"step": 27000,
+				"full30_mixed_rmse": 13.740523813264303,
+				"wall_clock_seconds": 2779.7863010689616
+			},
+			"points_sha256": "b4c2bc957c11ef9fb93c3e0971e3e21ec29fbd755d4a7a3c87536b7bf82f244b",
+			"points": [
+				{
+					"step": 1000,
+					"full30_mixed_rmse": 20.459015424838093,
+					"wall_clock_seconds": 104.90583648893517
+				},
+				{
+					"step": 2000,
+					"full30_mixed_rmse": 16.92240516538778,
+					"wall_clock_seconds": 210.09681575594004
+				},
+				{
+					"step": 3000,
+					"full30_mixed_rmse": 16.09354436769049,
+					"wall_clock_seconds": 311.79145822895225
+				},
+				{
+					"step": 4000,
+					"full30_mixed_rmse": 15.618984012775575,
+					"wall_clock_seconds": 414.9062126559438
+				},
+				{
+					"step": 5000,
+					"full30_mixed_rmse": 15.293027910906295,
+					"wall_clock_seconds": 517.6926182269817
+				},
+				{
+					"step": 6000,
+					"full30_mixed_rmse": 14.91801781551471,
+					"wall_clock_seconds": 620.8690530359745
+				},
+				{
+					"step": 7000,
+					"full30_mixed_rmse": 14.993455150386195,
+					"wall_clock_seconds": 723.2781769819558
+				},
+				{
+					"step": 8000,
+					"full30_mixed_rmse": 14.902226007526348,
+					"wall_clock_seconds": 825.1204766629962
+				},
+				{
+					"step": 9000,
+					"full30_mixed_rmse": 14.735406867740837,
+					"wall_clock_seconds": 927.422892457922
+				},
+				{
+					"step": 10000,
+					"full30_mixed_rmse": 14.644035843038386,
+					"wall_clock_seconds": 1030.0596213280223
+				},
+				{
+					"step": 11000,
+					"full30_mixed_rmse": 14.348641371098253,
+					"wall_clock_seconds": 1133.5057100179838
+				},
+				{
+					"step": 12000,
+					"full30_mixed_rmse": 14.221239881157741,
+					"wall_clock_seconds": 1236.4694753959775
+				},
+				{
+					"step": 13000,
+					"full30_mixed_rmse": 14.276404553353672,
+					"wall_clock_seconds": 1338.838489674963
+				},
+				{
+					"step": 14000,
+					"full30_mixed_rmse": 14.132418867825429,
+					"wall_clock_seconds": 1440.5211477789562
+				},
+				{
+					"step": 15000,
+					"full30_mixed_rmse": 14.264879126419281,
+					"wall_clock_seconds": 1542.9439938860014
+				},
+				{
+					"step": 16000,
+					"full30_mixed_rmse": 14.029589072852453,
+					"wall_clock_seconds": 1645.3730507380096
+				},
+				{
+					"step": 17000,
+					"full30_mixed_rmse": 14.17898848761152,
+					"wall_clock_seconds": 1747.7289922969649
+				},
+				{
+					"step": 18000,
+					"full30_mixed_rmse": 14.140542146191489,
+					"wall_clock_seconds": 1849.9508798610186
+				},
+				{
+					"step": 19000,
+					"full30_mixed_rmse": 14.008859698774847,
+					"wall_clock_seconds": 1953.0436759679578
+				},
+				{
+					"step": 20000,
+					"full30_mixed_rmse": 13.919140016155911,
+					"wall_clock_seconds": 2056.3966279859887
+				},
+				{
+					"step": 21000,
+					"full30_mixed_rmse": 14.078178873018052,
+					"wall_clock_seconds": 2160.24208197603
+				},
+				{
+					"step": 22000,
+					"full30_mixed_rmse": 14.03281861003494,
+					"wall_clock_seconds": 2263.566576346988
+				},
+				{
+					"step": 23000,
+					"full30_mixed_rmse": 13.921815648108073,
+					"wall_clock_seconds": 2366.4869853520067
+				},
+				{
+					"step": 24000,
+					"full30_mixed_rmse": 13.839951866481744,
+					"wall_clock_seconds": 2469.7590250719804
+				},
+				{
+					"step": 25000,
+					"full30_mixed_rmse": 13.85175676695344,
+					"wall_clock_seconds": 2573.2062939020107
+				},
+				{
+					"step": 26000,
+					"full30_mixed_rmse": 13.960903909472737,
+					"wall_clock_seconds": 2676.257519174018
+				},
+				{
+					"step": 27000,
+					"full30_mixed_rmse": 13.740523813264303,
+					"wall_clock_seconds": 2779.7863010689616
+				},
+				{
+					"step": 28000,
+					"full30_mixed_rmse": 14.026931214207295,
+					"wall_clock_seconds": 2883.774784188019
+				},
+				{
+					"step": 29000,
+					"full30_mixed_rmse": 13.982584727150375,
+					"wall_clock_seconds": 2987.0945030589355
+				},
+				{
+					"step": 30000,
+					"full30_mixed_rmse": 13.991643124553127,
+					"wall_clock_seconds": 3090.220541332965
+				},
+				{
+					"step": 31000,
+					"full30_mixed_rmse": 14.007656967015587,
+					"wall_clock_seconds": 3192.952720309957
+				},
+				{
+					"step": 32000,
+					"full30_mixed_rmse": 13.962036972825631,
+					"wall_clock_seconds": 3296.748414310976
+				},
+				{
+					"step": 33000,
+					"full30_mixed_rmse": 13.920795310933457,
+					"wall_clock_seconds": 3400.5905386449303
+				},
+				{
+					"step": 34000,
+					"full30_mixed_rmse": 14.268486298270036,
+					"wall_clock_seconds": 3503.218993803952
+				},
+				{
+					"step": 35000,
+					"full30_mixed_rmse": 14.098410944080033,
+					"wall_clock_seconds": 3605.7388678499265
+				},
+				{
+					"step": 36000,
+					"full30_mixed_rmse": 13.903428385127055,
+					"wall_clock_seconds": 3707.7408616220346
+				},
+				{
+					"step": 37000,
+					"full30_mixed_rmse": 13.992866714756474,
+					"wall_clock_seconds": 3810.0573267639847
+				}
+			]
+		}
+	]
+}
