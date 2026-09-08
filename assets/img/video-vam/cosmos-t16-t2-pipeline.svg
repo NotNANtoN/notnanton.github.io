@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1240" viewBox="0 0 960 1240" role="img" aria-labelledby="pipeline-title pipeline-desc" font-family="system-ui, sans-serif" font-size="22" fill="#0f172a">
+  <title id="pipeline-title">Cosmos T=16 and T=2 feature extraction and action prediction</title>
+  <desc id="pipeline-desc">Both paths encode the same five observed RGB frames into two causal VAE latent frames and use the same video-LoRA Cosmos backbone. The blue T=16 path adds fourteen noise slots before its layer-20 forward, then spatially pools 19,200 tokens to 4,800. The orange, undistilled T=2 path runs its own layer-20 forward without future slots and retains 2,400 unpooled tokens. Separately trained SmolExpert heads also receive current joint state and predict thirty actions. Recorded extraction times are 1,163 and 204 milliseconds; mixed-unit action RMSE values are 13.06 and 13.74. Pooling also changes, so this is not a pure frame-count ablation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="1240" fill="#ffffff"/>
+  <text x="480" y="44" text-anchor="middle" font-size="30" font-weight="700">Two Cosmos feature paths</text>
+  <text x="480" y="78" text-anchor="middle" fill="#475569">Same video-LoRA Cosmos backbone</text>
+
+  <g id="observations" text-anchor="middle">
+    <rect x="220" y="100" width="520" height="48" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="480" y="132" font-size="24" font-weight="700">Same five observed RGB frames</text>
+  </g>
+  <path d="M480 148 V163" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="vae" text-anchor="middle">
+    <rect x="320" y="170" width="320" height="46" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="480" y="201">Causal video VAE</text>
+  </g>
+  <path d="M480 216 V231" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="latents" text-anchor="middle">
+    <rect x="250" y="238" width="460" height="48" rx="12" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="480" y="269">Two observed latent frames</text>
+  </g>
+  <g fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M480 286 V306 H244 V326"/>
+    <path d="M480 306 H716 V326"/>
+  </g>
+
+  <g id="t16" text-anchor="middle">
+    <rect x="32" y="332" width="424" height="792" rx="18" fill="#f8fbff" stroke="#bfdbfe"/>
+    <text x="244" y="367" font-size="26" font-weight="700" fill="#1d4ed8">T=16 · full context</text>
+    <g id="t16-observed-slots" fill="#ccfbf1" stroke="#0f766e" stroke-width="2">
+      <rect x="70" y="389" width="18" height="26" rx="3"/>
+      <rect x="92" y="389" width="18" height="26" rx="3"/>
+    </g>
+    <g id="t16-noise-slots" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5">
+      <rect x="114" y="389" width="18" height="26" rx="3"/>
+      <rect x="136" y="389" width="18" height="26" rx="3"/>
+      <rect x="158" y="389" width="18" height="26" rx="3"/>
+      <rect x="180" y="389" width="18" height="26" rx="3"/>
+      <rect x="202" y="389" width="18" height="26" rx="3"/>
+      <rect x="224" y="389" width="18" height="26" rx="3"/>
+      <rect x="246" y="389" width="18" height="26" rx="3"/>
+      <rect x="268" y="389" width="18" height="26" rx="3"/>
+      <rect x="290" y="389" width="18" height="26" rx="3"/>
+      <rect x="312" y="389" width="18" height="26" rx="3"/>
+      <rect x="334" y="389" width="18" height="26" rx="3"/>
+      <rect x="356" y="389" width="18" height="26" rx="3"/>
+      <rect x="378" y="389" width="18" height="26" rx="3"/>
+      <rect x="400" y="389" width="18" height="26" rx="3"/>
+    </g>
+    <text x="244" y="445">2 observed + 14 noise slots</text>
+    <text x="244" y="472" fill="#475569">No future observations</text>
+    <path d="M244 482 V496" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+    <g id="t16-forward">
+      <rect x="52" y="502" width="384" height="78" rx="12" fill="#ffffff" stroke="#93c5fd"/>
+      <text x="244" y="533" font-size="24" font-weight="700">Forward to layer 20</text>
+      <text x="244" y="563" fill="#1d4ed8">19,200 raw tokens</text>
+    </g>
+    <path d="M244 580 V604" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <g id="t16-pooling">
+      <rect x="52" y="610" width="384" height="110" rx="12" fill="#ffffff" stroke="#93c5fd"/>
+      <text x="244" y="640" font-size="24" font-weight="700">Spatial pool2</text>
+      <text x="244" y="670" fill="#475569">2× on each spatial axis</text>
+      <text x="244" y="703" fill="#1d4ed8">4,800 tokens · all 16 slots</text>
+    </g>
+    <path d="M244 720 V744" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <g id="t16-head">
+      <rect x="52" y="750" width="384" height="76" rx="12" fill="#ffffff" stroke="#93c5fd"/>
+      <text x="244" y="781" font-size="24" font-weight="700">SmolExpert</text>
+      <text x="244" y="811">+ current joint state</text>
+    </g>
+    <path d="M244 826 V850" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <g id="t16-actions">
+      <rect x="112" y="856" width="264" height="48" rx="12" fill="#dbeafe"/>
+      <text x="244" y="888" font-size="24" font-weight="700" fill="#1d4ed8">30 actions</text>
+    </g>
+    <g id="t16-metrics">
+      <rect x="52" y="958" width="384" height="146" rx="12" fill="#ffffff" stroke="#93c5fd"/>
+      <text x="244" y="988" fill="#475569">Feature extraction</text>
+      <text x="244" y="1025" font-size="32" font-weight="700" fill="#1d4ed8">1,163 ms</text>
+      <text x="244" y="1061" fill="#475569">Recorded action RMSE</text>
+      <text x="244" y="1092" font-size="26" font-weight="700">13.06</text>
+    </g>
+  </g>
+
+  <g id="t2" text-anchor="middle">
+    <rect x="504" y="332" width="424" height="792" rx="18" fill="#fffaf5" stroke="#fed7aa"/>
+    <text x="716" y="367" font-size="26" font-weight="700" fill="#c2410c">T=2 · observed only</text>
+    <g id="t2-observed-slots" fill="#ccfbf1" stroke="#0f766e" stroke-width="2">
+      <rect x="696" y="389" width="18" height="26" rx="3"/>
+      <rect x="718" y="389" width="18" height="26" rx="3"/>
+    </g>
+    <text x="716" y="445">Future slots removed before</text>
+    <text x="716" y="472">the transformer</text>
+    <path d="M716 482 V496" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-orange)"/>
+
+    <g id="t2-forward">
+      <rect x="524" y="502" width="384" height="78" rx="12" fill="#ffffff" stroke="#fdba74"/>
+      <text x="716" y="533" font-size="24" font-weight="700">Forward to layer 20</text>
+      <text x="716" y="563" fill="#c2410c">2,400 raw tokens</text>
+    </g>
+    <path d="M716 580 V604" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-orange)"/>
+    <g id="t2-pooling">
+      <rect x="524" y="610" width="384" height="110" rx="12" fill="#ffffff" stroke="#fdba74"/>
+      <text x="716" y="640" font-size="24" font-weight="700">No pooling</text>
+      <text x="716" y="670" fill="#475569">Keep all observed tokens</text>
+      <text x="716" y="703" fill="#c2410c">2,400 tokens · 2 slots</text>
+    </g>
+    <path d="M716 720 V744" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-orange)"/>
+    <g id="t2-head">
+      <rect x="524" y="750" width="384" height="76" rx="12" fill="#ffffff" stroke="#fdba74"/>
+      <text x="716" y="781" font-size="24" font-weight="700">SmolExpert</text>
+      <text x="716" y="811">+ current joint state</text>
+    </g>
+    <path d="M716 826 V850" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-orange)"/>
+    <g id="t2-actions">
+      <rect x="584" y="856" width="264" height="48" rx="12" fill="#ffedd5"/>
+      <text x="716" y="888" font-size="24" font-weight="700" fill="#c2410c">30 actions</text>
+    </g>
+    <g id="t2-metrics">
+      <rect x="524" y="958" width="384" height="146" rx="12" fill="#ffffff" stroke="#fdba74"/>
+      <text x="716" y="988" fill="#475569">Feature extraction</text>
+      <text x="716" y="1025" font-size="32" font-weight="700" fill="#c2410c">204 ms</text>
+      <text x="716" y="1061" fill="#475569">Recorded action RMSE</text>
+      <text x="716" y="1092" font-size="26" font-weight="700">13.74</text>
+    </g>
+  </g>
+
+  <text x="480" y="934" text-anchor="middle" fill="#475569">Action heads trained separately</text>
+  <text x="480" y="1154" text-anchor="middle" font-size="25" font-weight="700">5.7× faster feature extraction; +0.68 recorded RMSE</text>
+  <text x="480" y="1184" text-anchor="middle" font-size="20" fill="#475569">Extraction only · mixed-unit action RMSE · pooling also changes</text>
+  <text x="480" y="1212" text-anchor="middle" font-size="20" fill="#475569">T=2 shown here is undistilled.</text>
+</svg>
