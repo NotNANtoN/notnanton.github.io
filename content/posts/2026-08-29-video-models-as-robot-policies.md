@@ -39,9 +39,9 @@ The metric is masked global aggregate RMSE over valid action targets; lower is b
 
 Here, T counts latent frames, not RGB frames. The two Cosmos paths use the same video-LoRA backbone, but different input lengths and policy features.
 
-<figure class="post-figure" data-zoomable>
-  <img src="/assets/img/video-vam/cosmos-t16-t2-pipeline.svg" alt="Parallel Cosmos paths: T=16 adds future noise slots before its transformer forward and pools the features; T=2 runs without those slots and keeps unpooled features. Separate action heads predict 30 actions." loading="lazy">
-  <figcaption>Same observed frames and video-LoRA backbone. T=2 drops 14 noise slots before the layer-20 forward. Timings cover feature extraction only; pooling also changes, and action errors are historical recorded results.</figcaption>
+<figure class="post-figure">
+  <iframe src="/assets/interactive/cosmos-feature-paths.html" title="Interactive Cosmos feature paths: reference T=16 and proposed T=2" width="1200" height="800" loading="lazy" style="display:block;width:100%;height:800px;border:0;background:#fff"></iframe>
+  <figcaption>Switch paths to follow the layer-20 readout into SmolExpert. These undistilled paths share the video-LoRA weights; T=2 omits 14 latent noise slots. Timings cover feature extraction only, and pooling also changes. <a href="/assets/interactive/cosmos-feature-paths.html" target="_blank" rel="noopener">Open the interactive figure full size.</a></figcaption>
 </figure>
 
 To map video representations to robot trajectories, I benchmarked two action head architectures:
